@@ -165,7 +165,16 @@ python scripts/analyze/reverify_corpus.py \
 # Summarise into the tables reported in the paper
 python scripts/analyze/summarize_reverify.py \
     --baseline runs/baseline.json --heldout runs/heldout.json \
+    --clone-free runs/clone_free.json \
+    --tolerance-bound runs/tolerance_bound.json \
+    --timing-clone-cost runs/timing_clone_cost.json \
     --out runs/summary.md
+
+# Bound on the error each tolerance rule admits, on the published test cases
+python scripts/analyze/tolerance_bound_probe.py --out runs/tolerance_bound.json
+
+# Cost of the in-timed-region clone and the speedup it reports
+python scripts/analyze/timing_clone_cost.py --out runs/timing_clone_cost.json
 ```
 
 `reverify_corpus.py` accepts kernels from all three sources in one corpus; file
