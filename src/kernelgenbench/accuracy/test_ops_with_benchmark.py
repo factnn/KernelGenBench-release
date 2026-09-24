@@ -11629,10 +11629,7 @@ def test_accuracy_resolve_conj(shape, dtype):
 @parametrize("shape", SPECIAL_SHAPES)
 @parametrize("dtype", [torch.cfloat])
 def test_accuracy_resolve_neg(shape, dtype):
-    if VENDOR_NAME == "ascend":
-        x = torch.randn(size=shape, dtype=dtype).to(device=device)
-    else:
-        x = torch.randn(size=shape, dtype=dtype, device=device)
+    x = torch.randn(size=shape, dtype=dtype, device=device)
     y = x.conj()
     z = y.imag
     assert z.is_neg()
@@ -11644,10 +11641,7 @@ def test_accuracy_resolve_neg(shape, dtype):
     import triton
     from sandbox.utils.accuracy_utils import CustomBenchmarkResult
     quantiles = [0.5, 0.2, 0.8]
-    if VENDOR_NAME == "ascend":
-        x_bench = torch.randn(size=shape, dtype=dtype).to(device=device)
-    else:
-        x_bench = torch.randn(size=shape, dtype=dtype, device=device)
+    x_bench = torch.randn(size=shape, dtype=dtype, device=device)
     y_bench = x_bench.conj()
     z_bench = y_bench.imag
     ms_torch, _, _ = get_triton_testing().do_bench(lambda: z_bench.resolve_neg(), rep=100, quantiles=quantiles)
