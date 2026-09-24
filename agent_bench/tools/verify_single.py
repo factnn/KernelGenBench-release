@@ -98,6 +98,8 @@ def verify_single_kernel(
     timeout: int = 600,
     config: dict = None,
     output_dir: Path = None,
+    namespace: str = "aten",
+    test_modules: list = None,
 ) -> dict:
     """Verify a single kernel for correctness.
 
@@ -108,6 +110,12 @@ def verify_single_kernel(
         timeout: Timeout in seconds
         config: Optional config dict
         output_dir: Optional directory to save verification logs
+        namespace: Operator namespace used to disambiguate test functions that
+            share a name across sources ("aten", "cublas", "vllm13", ...).
+            Defaults to "aten" for backwards compatibility.
+        test_modules: Optional list of test module paths (files or directories)
+            to load instead of the dataset default. Needed when re-verifying
+            kernels from several sources in one call.
 
     Returns:
         Dict with verification results:
@@ -136,7 +144,19 @@ def verify_single_kernel(
 
     # Get test module
     try:
-        test_module = get_test_module(dataset, config)
+        if test_modules:
+            resolved_modules = []
+            for entry in test_modules:
+                candidate = Path(entry)
+                if not candidate.is_absolute():
+                    candidate = PROJECT_ROOT / candidate
+                resolved_modules.append(str(candidate))
+            missing = [m for m in resolved_modules if not Path(m).exists()]
+            if missing:
+                raise ValueError(f"Test module not found: {missing}")
+            modules_to_load = resolved_modules
+        else:
+            modules_to_load = [get_test_module(dataset, config)]
     except ValueError as e:
         return {
             "passed": False,
@@ -146,10 +166,10 @@ def verify_single_kernel(
             "failed_tests": 0,
         }
 
-    if not Path(test_module).exists():
+    if not modules_to_load or not Path(modules_to_load[0]).exists():
         return {
             "passed": False,
-            "error": f"Test module not found: {test_module}",
+            "error": f"Test module not found: {modules_to_load}",
             "total_tests": 0,
             "passed_tests": 0,
             "failed_tests": 0,
@@ -190,18 +210,23 @@ def verify_single_kernel(
         )
 
         verifier = Verifier(verify_config)
-        verifier.set_modules(modules=[test_module], mode="accuracy")
+        verifier.set_modules(modules=modules_to_load, mode="accuracy")
 
         # Determine namespace based on dataset
-        namespace = "aten"
         full_name = f"{namespace}::{operator}"
+
+        # Non-ATen sources (cublas, vllm13, ...) are dispatched through the
+        # "triton" namespace of the kernelgenbench module; ATen operators are
+        # mounted through torch.library instead.  This mirrors the convention
+        # used by scripts/generate_kernel_and_verify.py.
+        source_namespace = "" if full_name.startswith("aten::") else "triton"
 
         # Prepare verification request
         verify_req = VerifyRequest(
             source=[Source(
                 source=kernel_code,
                 function_name=full_name,
-                namespace=""
+                namespace=source_namespace,
             )],
             test_func=None,
         )
@@ -312,6 +337,22 @@ Examples:
         help="Dataset name (default: KernelGenBench)"
     )
     parser.add_argument(
+        "--namespace", "-n",
+        type=str,
+        default="aten",
+        help="Operator namespace: aten | cublas | vllm13 (default: aten)"
+    )
+    parser.add_argument(
+        "--test-modules",
+        type=str,
+        default=None,
+        help="Comma separated test module paths (files or directories) to load "
+             "instead of the dataset default, e.g. "
+             "'src/kernelgenbench/accuracy/test_ops_with_benchmark.py,"
+             "src/kernelgenbench/accuracy/cublas,"
+             "src/kernelgenbench/accuracy/vllm13'"
+    )
+    parser.add_argument(
         "--timeout", "-t",
         type=int,
         default=600,
@@ -378,6 +419,9 @@ Examples:
                 timeout=args.timeout,
                 config=config,
                 output_dir=args.output_dir,
+                namespace=args.namespace,
+                test_modules=(args.test_modules.split(",")
+                              if args.test_modules else None),
             )
         # Log captured output to stderr if any
         captured = captured_stdout.getvalue()
@@ -393,6 +437,9 @@ Examples:
             timeout=args.timeout,
             config=config,
             output_dir=args.output_dir,
+            namespace=args.namespace,
+            test_modules=(args.test_modules.split(",")
+                          if args.test_modules else None),
         )
         # Human-readable output
         if result["passed"]:

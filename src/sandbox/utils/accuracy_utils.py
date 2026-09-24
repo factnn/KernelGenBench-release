@@ -16,11 +16,66 @@ import numpy as np
 from sandbox.config import QUICK_MODE, TO_CPU
 
 import os
+import math
 UPCAST = os.environ.get("KERNELGENBENCH_UPCAST", "1") == "1"
 
 fp64_is_supported = True
 
 import torch
+
+# ==============================================================================
+# Evaluation-policy switches
+# ==============================================================================
+# These switches exist so that the *published* protocol can be re-run under
+# alternative validation policies without changing the default behaviour.  With
+# every switch left at its default the module reproduces the paper protocol
+# bit-for-bit; the alternatives are used by the robustness analyses in
+# scripts/analyze/ (tolerance sensitivity, held-out-shape generalization, and
+# clone-free timing).
+#
+#   KGB_ATOL_MODE    scaled | const | sqrt     (default: scaled)
+#                    scaled -> atol = 1e-4 * D_reduce            (paper protocol)
+#                    sqrt   -> atol = 1e-4 * sqrt(D_reduce)
+#                    const  -> atol = 1e-4
+#   KGB_HELDOUT      "1" to append held-out shapes/strides that are never
+#                    exposed to the generator or the agent (default: off)
+#   KGB_SEED_OFFSET  integer added to the verification seed, so that held-out
+#                    runs also see different input *values* (default: 0)
+#   KGB_TIMING_MODE  clone | clone_free        (default: clone)
+#                    clone_free removes the per-call ``.clone()`` that the
+#                    parameterised tests place inside the timed region, for
+#                    operators that do not mutate their inputs.  Operators that
+#                    do mutate their inputs keep the clone automatically.
+# ==============================================================================
+
+ATOL_MODE = os.environ.get("KGB_ATOL_MODE", "scaled").strip().lower()
+HELDOUT_MODE = os.environ.get("KGB_HELDOUT", "0") == "1"
+SEED_OFFSET = int(os.environ.get("KGB_SEED_OFFSET", "0"))
+TIMING_MODE = os.environ.get("KGB_TIMING_MODE", "clone").strip().lower()
+# When KGB_AUDIT points at a file, every comparison that passes the published
+# tolerance also records how much tolerance it actually needed.  A single
+# baseline run therefore yields the pass/fail outcome for a whole family of
+# tolerance rules (see scripts/analyze/tolerance_from_audit.py) at no extra
+# GPU cost.
+AUDIT_PATH = os.environ.get("KGB_AUDIT", "").strip()
+
+if ATOL_MODE not in ("scaled", "const", "sqrt"):
+    raise ValueError(f"Unknown KGB_ATOL_MODE: {ATOL_MODE!r}")
+if TIMING_MODE not in ("clone", "clone_free"):
+    raise ValueError(f"Unknown KGB_TIMING_MODE: {TIMING_MODE!r}")
+
+
+def audit(record: dict) -> None:
+    """Append one JSON record to the audit log, if auditing is enabled."""
+    if not AUDIT_PATH:
+        return
+    import json as _json
+    record["pid"] = os.getpid()
+    try:
+        with open(AUDIT_PATH, "a") as handle:
+            handle.write(_json.dumps(record) + "\n")
+    except Exception:
+        pass
 
 class CustomBenchmarkResult(BaseModel):
     ref_time: float
@@ -67,11 +122,66 @@ RESOLUTION = {
 }
 
 
+def effective_atol(reduce_dim: int) -> float:
+    """Absolute tolerance for a comparison over ``reduce_dim`` accumulated terms.
+
+    ``scaled`` is the protocol used for every number reported in the paper:
+    ``atol = 1e-4 * D_reduce``, which grows linearly with the number of
+    accumulated terms.  The alternatives are used to test whether the reported
+    pass rates are sensitive to that choice.
+    """
+    d = max(int(reduce_dim), 1)
+    if ATOL_MODE == "const":
+        return 1e-4
+    if ATOL_MODE == "sqrt":
+        return 1e-4 * math.sqrt(d)
+    return 1e-4 * d
+
+
+def _record_tolerance_slack(res, ref, rtol, reduce_dim, dtype):
+    """Record how much tolerance a passing comparison actually consumed.
+
+    ``torch.testing.assert_close`` accepts a pair when
+    ``|res - ref| <= atol + rtol * |ref|`` elementwise.  For a passing
+    comparison the smallest ``atol`` that would still accept the pair is
+    ``max(|res - ref| - rtol * |ref|)``; we log that value together with the
+    reduction length, so that any ``atol = f(D_reduce)`` rule can be evaluated
+    afterwards without re-running the kernel.
+    """
+    if not AUDIT_PATH or not (dtype.is_floating_point or dtype.is_complex):
+        return
+    try:
+        diff = (res - ref).abs()
+        mag = ref.abs()
+        both_nan = torch.isnan(diff) & torch.isnan(mag)
+        if bool(both_nan.any()):
+            zero = torch.zeros_like(diff)
+            diff = torch.where(both_nan, zero, diff)
+            mag = torch.where(both_nan, zero, mag)
+        slack = diff - rtol * mag
+        slack = slack[~torch.isnan(slack)]
+        max_slack = float(slack.max()) if slack.numel() else 0.0
+    except Exception:
+        return
+    audit({
+        "kind": "tolerance",
+        "reduce_dim": int(reduce_dim),
+        "rtol": float(rtol),
+        "dtype": str(dtype),
+        "max_slack": max_slack,
+    })
+
+
 def assert_close(res, ref, dtype, equal_nan=False, reduce_dim=1):
     assert res.dtype == dtype
     ref = ref.to(dtype)
-    atol = 1e-4 * reduce_dim
+    atol = effective_atol(reduce_dim)
     rtol = RESOLUTION[dtype]
+    if AUDIT_PATH:
+        torch.testing.assert_close(res, ref, atol=atol, rtol=rtol,
+                                   equal_nan=equal_nan)
+        _record_tolerance_slack(res, ref, rtol, reduce_dim, dtype)
+        return
     torch.testing.assert_close(res, ref, atol=atol, rtol=rtol, equal_nan=equal_nan)
 
 
@@ -216,6 +326,72 @@ KRON_SHAPES = [
     [(3, 3), (3, 3)],
     [(1, 1, 1), (2, 2, 2)],
 ]
+# ==============================================================================
+# Held-out shape / stride grids (KGB_HELDOUT=1)
+# ==============================================================================
+# These grids are *never* exposed to the generator or to the agent: they are not
+# part of the published test suite, the prompts, or the verification CLI used
+# during generation.  They mirror the structure of the published grids (same
+# per-slot tensor rank and layout family) but use different sizes, so that a
+# kernel which is only correct on the published shapes is detected.  With
+# KGB_HELDOUT unset nothing in this block is appended and the published test
+# suite is reproduced exactly.
+HELDOUT_UT_SHAPES_1D = [(n,) for n in [49, 63, 145, 529, 2065, 4097]]
+HELDOUT_UT_SHAPES_2D = list(itertools.product([3, 7, 999], [2, 31, 127, 2001]))
+HELDOUT_POINTWISE_SHAPES = [(), (7,), (511, 257), (7, 17, 31), (5, 7, 11, 13), (2, 3, 4, 5, 6)]
+HELDOUT_SPECIAL_SHAPES = [(7,), (2047, 2047), (7, 17, 31), (5, 7, 11, 13), (2, 3, 4, 5, 6)]
+HELDOUT_DISTRIBUTION_SHAPES = [(7, 17, 31)]
+HELDOUT_REDUCTION_SHAPES = [(3, 5), (2048, 129), (151, 8191, 5)]
+HELDOUT_REDUCTION_SMALL_SHAPES = [(3, 5), (2048, 129), (151, 1021, 5)]
+HELDOUT_STACK_SHAPES = [
+    [(7,), (7,)],
+    [(7, 255), (7, 255)],
+    [(7, 17, 31), (7, 17, 31), (7, 17, 31)],
+]
+HELDOUT_SHAPE_STRIDES = [
+    # 1D contiguous / dilated
+    ((7,), (1,)),
+    ((4096,), (1,)),
+    ((255,), (3,)),
+    ((4096,), (2,)),
+    # 2D contiguous / transposed
+    ((33, 97), (97, 1)),
+    ((64, 4096), (4096, 1)),
+    ((97, 33), (1, 97)),
+    ((129, 2048), (1, 129)),
+    # 3D contiguous / transposed
+    ((5, 7, 11), (77, 11, 1)),
+    ((97, 131, 5), (655, 5, 1)),
+    ((7, 5, 11), (11, 77, 1)),
+    ((131, 97, 5), (5, 655, 1)),
+]
+HELDOUT_IRREGULAR_SHAPE_STRIDES = [((8, 8, 8, 8, 8), (1, 4096, 17, 257, 999))]
+HELDOUT_UPSAMPLE_SHAPES = [
+    (7, 3, 65, 129),
+    (2, 5, 201, 203),
+    (1, 1, 255, 257),
+]
+HELDOUT_KRON_SHAPES = [
+    [(), (7,)],
+    [(4, 5), (2, 3)],
+    [(3, 3, 3), (2, 2, 2)],
+]
+
+if HELDOUT_MODE:
+    UT_SHAPES_1D = UT_SHAPES_1D + HELDOUT_UT_SHAPES_1D
+    UT_SHAPES_2D = UT_SHAPES_2D + HELDOUT_UT_SHAPES_2D
+    POINTWISE_SHAPES = POINTWISE_SHAPES + HELDOUT_POINTWISE_SHAPES
+    SPECIAL_SHAPES = SPECIAL_SHAPES + HELDOUT_SPECIAL_SHAPES
+    DISTRIBUTION_SHAPES = DISTRIBUTION_SHAPES + HELDOUT_DISTRIBUTION_SHAPES
+    REDUCTION_SHAPES = REDUCTION_SHAPES + HELDOUT_REDUCTION_SHAPES
+    REDUCTION_SMALL_SHAPES = REDUCTION_SMALL_SHAPES + HELDOUT_REDUCTION_SMALL_SHAPES
+    STACK_SHAPES = STACK_SHAPES + HELDOUT_STACK_SHAPES
+    SHAPE_STRIDES = SHAPE_STRIDES + HELDOUT_SHAPE_STRIDES
+    IRREGULAR_SHAPE_STRIDES = IRREGULAR_SHAPE_STRIDES + HELDOUT_IRREGULAR_SHAPE_STRIDES
+    UPSAMPLE_SHAPES = UPSAMPLE_SHAPES + HELDOUT_UPSAMPLE_SHAPES
+    KRON_SHAPES = KRON_SHAPES + HELDOUT_KRON_SHAPES
+
+
 # Add some test cases with zeor-dimensional tensor and zero-sized tensors.
 FLOAT_DTYPES = [torch.float16, torch.float32, torch.bfloat16]
 ALL_FLOAT_DTYPES = FLOAT_DTYPES + [torch.float64] if fp64_is_supported else FLOAT_DTYPES
@@ -275,8 +451,71 @@ def unsqueeze_tensor(inp, max_ndim):
 
 
 def init_seed(seed):
+    seed = int(seed) + SEED_OFFSET
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
+
+
+# ==============================================================================
+# Clone-free timing (KGB_TIMING_MODE=clone_free)
+# ==============================================================================
+# Most parameterised tests place a defensive ``inp.clone()`` *inside* the timed
+# region, e.g. ``do_bench(lambda: torch.sum(inp.clone()))``.  The clone is
+# required for operators that mutate their inputs, but for every other operator
+# it is a fixed memory-bound cost that is added to both the reference and the
+# candidate measurement and therefore compresses the reported speedup towards
+# 1.0.  When KGB_TIMING_MODE=clone_free we wrap ``triton.testing.do_bench`` so
+# that ``Tensor.clone`` returns the tensor itself for the duration of the timed
+# call.  Before doing so we execute the callable once and watch the tensors'
+# version counters: if the operator mutates any of its inputs, the clone is
+# semantically required and we fall back to the unmodified measurement.  This
+# keeps in-place operators on exactly the published protocol.
+
+
+def _install_clone_free_timing():
+    try:
+        import triton.testing as _triton_testing
+    except Exception:  # triton unavailable: nothing to patch
+        return
+
+    original = _triton_testing.do_bench
+    if getattr(original, "_kgb_clone_free", False):
+        return
+
+    def _clone_free_do_bench(fn, *args, **kwargs):
+        real_clone = torch.Tensor.clone
+        recorded = []
+
+        def _identity_clone(self, *a, **k):
+            recorded.append((self, self._version))
+            return self
+
+        torch.Tensor.clone = _identity_clone
+        try:
+            try:
+                fn()  # trial execution, untimed
+            except Exception:
+                # Never mask a real failure: fall back to the standard path.
+                torch.Tensor.clone = real_clone
+                return original(fn, *args, **kwargs)
+
+            mutates_input = any(
+                tensor._version != version for tensor, version in recorded
+            )
+            if mutates_input or not recorded:
+                torch.Tensor.clone = real_clone
+                return original(fn, *args, **kwargs)
+
+            return original(fn, *args, **kwargs)
+        finally:
+            torch.Tensor.clone = real_clone
+
+    _clone_free_do_bench._kgb_clone_free = True
+    _triton_testing.do_bench = _clone_free_do_bench
+
+
+if TIMING_MODE == "clone_free":
+    _install_clone_free_timing()
