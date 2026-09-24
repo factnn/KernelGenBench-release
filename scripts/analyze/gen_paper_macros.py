@@ -83,19 +83,25 @@ def main():
         macros["TOLNUMSQRT"] = str(n_sqrt)
         macros["TOLNUMCONST"] = str(n_const)
         lost = n_pub - n_const
+        lost_ops = sorted(op for op, t in audits.items() if t["passes_scaled"]
+                          and not t["passes_const"])
         if lost == 0:
             macros["TOLLOSTSENTENCE"] = (
                 "the reduction-length scaling is therefore not load-bearing for "
                 "any kernel in this corpus.")
+            macros["TOLNUMBEROPS"] = "none"
         else:
+            names = ", ".join(r"\texttt{" + esc(op.split("::")[-1]) + "}"
+                              for op in lost_ops)
             macros["TOLLOSTSENTENCE"] = (
                 f"{lost} operator(s) pass the published rule but fail the "
-                "constant rule, which bounds how much of the reported accuracy "
-                "depends on the scaling.")
+                f"constant rule, so the scaling is load-bearing for them.")
+            macros["TOLNUMBEROPS"] = names
     else:
         for k in ("TOLCHECKS", "TOLMAXD", "TOLMAXSLACK", "TOLNUMPUB",
                   "TOLNUMSQRT", "TOLNUMCONST"):
             macros[k] = "n/a"
+        macros["TOLNUMBEROPS"] = "n/a"
         macros["TOLLOSTSENTENCE"] = "the audit is pending."
 
     # ---- held-out generalization ----------------------------------------

@@ -69,12 +69,18 @@ def run_one(item, policy_env, python, gpu, timeout, extra_env):
     env.update(extra_env)
     env["PYTHONPATH"] = str(REPO / "src")
     env["CUDA_VISIBLE_DEVICES"] = str(gpu)
+    safe = f"{namespace}__{operator}".replace("/", "_")
     audit_path = env.get("KGB_AUDIT")
     if audit_path:
         # one audit file per operator so that concurrent workers never interleave
-        safe = f"{namespace}__{operator}".replace("/", "_")
         env["KGB_AUDIT"] = str(Path(audit_path) / f"{safe}.jsonl")
         Path(env["KGB_AUDIT"]).parent.mkdir(parents=True, exist_ok=True)
+    verify_root = env.get("KGB_VERIFY_DIR")
+    verify_dir = None
+    if verify_root:
+        # the verifier only reports a speedup when it persists its logs
+        verify_dir = Path(verify_root) / safe
+        verify_dir.mkdir(parents=True, exist_ok=True)
     cmd = [
         python,
         str(VERIFY_CLI),
@@ -85,6 +91,8 @@ def run_one(item, policy_env, python, gpu, timeout, extra_env):
         "--timeout", str(timeout),
         "--output-json",
     ]
+    if verify_dir is not None:
+        cmd += ["--output-dir", str(verify_dir)]
     started = time.time()
     try:
         proc = subprocess.run(
@@ -114,6 +122,16 @@ def run_one(item, policy_env, python, gpu, timeout, extra_env):
             "passed": False, "error": "driver timeout", "total_tests": 0,
             "passed_tests": 0, "failed_tests": 0, "returncode": None,
         }
+    if verify_dir is not None:
+        verify_json = verify_dir / "verify.json"
+        if verify_json.exists():
+            try:
+                saved = json.loads(verify_json.read_text())
+                if isinstance(saved.get("speedup"), (int, float)):
+                    payload["speedup"] = saved["speedup"]
+            except (json.JSONDecodeError, OSError):
+                pass
+
     payload["op"] = f"{namespace}::{operator}"
     payload["kernel"] = str(kernel_path)
     payload["wall_s"] = round(time.time() - started, 1)
@@ -169,6 +187,9 @@ def main():
                     help="per-operator accuracy timeout passed to the verifier")
     ap.add_argument("--only", type=str, default=None,
                     help="comma separated list of full op names to restrict to")
+    ap.add_argument("--verify-dir", type=str, default=None,
+                    help="persist verifier logs here so that per-operator "
+                         "speedups are available in the results")
     ap.add_argument("--audit-dir", type=str, default=None,
                     help="collect per-comparison tolerance slack into this "
                          "directory (one JSONL per operator)")
@@ -204,6 +225,9 @@ def main():
     if args.audit_dir:
         Path(args.audit_dir).mkdir(parents=True, exist_ok=True)
         policy_env["KGB_AUDIT"] = args.audit_dir
+    if args.verify_dir:
+        Path(args.verify_dir).mkdir(parents=True, exist_ok=True)
+        policy_env["KGB_VERIFY_DIR"] = args.verify_dir
     print(f"[policy] {args.policy} env={policy_env}")
     print(f"[corpus] {len(items)} operators to verify on {len(gpus)} GPUs")
 
