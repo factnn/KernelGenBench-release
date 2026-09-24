@@ -11370,5 +11370,289 @@ def test_accuracy_zeros_like(shape, dtype):
     return result
 
 
+# ==============================================================================
+# Restored operator tests
+# ------------------------------------------------------------------------------
+# The 2026 cleanup that removed the flag_gems dependency ("fix: remove flag_gems
+# dependency from test_v2_1_ops_with_benchmark.py") also dropped the operator
+# tests below, so the released suite could no longer verify these operators at
+# all (they failed with "0/0" tests).  They are restored here from the module
+# that produced the paper's numbers, with three mechanical changes: the ops
+# dispatch context is ``kernelgenbench.use_ops`` (the suite's current name), the
+# comparison helpers use their current names, and the vendor branch on
+# ``flag_gems.vendor_name`` is reduced to the NVIDIA path this artifact targets.
+# ==============================================================================
+
+@label("eq")
+@parametrize("shape", POINTWISE_SHAPES)
+@parametrize("dtype", FLOAT_DTYPES)
+def test_accuracy_eq(shape, dtype):
+    inp1 = torch.randint(0, 10, shape, dtype=dtype, device=device)
+    inp2 = torch.randint(0, 10, shape, dtype=dtype, device=device)
+    ref_inp1 = to_reference(inp1)
+    ref_inp2 = to_reference(inp2)
+
+    ref_out = torch.eq(ref_inp1, ref_inp2)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        res_out = torch.eq(inp1, inp2)
+
+    kernelgenbench_assert_equal(res_out, ref_out)
+
+    # Benchmark: 性能测试
+    import triton
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    quantiles = [0.5, 0.2, 0.8]
+    ms_torch, _, _ = get_triton_testing().do_bench(lambda: torch.eq(ref_inp1.clone(), ref_inp2.clone()), rep=100, quantiles=quantiles)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        ms_triton, _, _ = get_triton_testing().do_bench(lambda: torch.eq(inp1.clone(), inp2.clone()), rep=100, quantiles=quantiles)
+    speedup = ms_torch / ms_triton
+    result = CustomBenchmarkResult(ref_time=ms_torch, res_time=ms_triton, speedup=speedup,)
+    return result
 
 
+@label("eq")
+@parametrize("shape", POINTWISE_SHAPES)
+@parametrize("dtype", FLOAT_DTYPES)
+def test_accuracy_eq_scalar(shape, dtype):
+    inp1 = torch.randint(0, 10, shape, dtype=dtype, device=device)
+    inp2 = 0
+    ref_inp1 = to_reference(inp1)
+
+    ref_out = torch.eq(ref_inp1, inp2)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        res_out = torch.eq(inp1, inp2)
+
+    kernelgenbench_assert_equal(res_out, ref_out)
+
+    # Benchmark: 性能测试
+    import triton
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    quantiles = [0.5, 0.2, 0.8]
+    ms_torch, _, _ = get_triton_testing().do_bench(lambda: torch.eq(ref_inp1.clone(), inp2), rep=100, quantiles=quantiles)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        ms_triton, _, _ = get_triton_testing().do_bench(lambda: torch.eq(inp1.clone(), inp2), rep=100, quantiles=quantiles)
+    speedup = ms_torch / ms_triton
+    result = CustomBenchmarkResult(ref_time=ms_torch, res_time=ms_triton, speedup=speedup)
+    return result
+
+
+@label("expand")
+@parametrize(
+    "shape,expand_shape",
+    [
+        ((1,), (8,)),
+        ((1, 16), (8, 16)),
+        ((1, 1, 32), (4, 8, 32)),
+        ((16, 1), (16, 32)),
+        ((1, 16, 1), (8, 16, 32)),
+    ]
+)
+@parametrize("dtype", FLOAT_DTYPES)
+def test_accuracy_expand(shape, expand_shape, dtype):
+    """Test expand: returns a new view of the tensor with singleton dimensions expanded"""
+    inp = torch.randn(shape, dtype=dtype, device=device)
+    ref_inp = to_reference(inp)
+    
+    ref_out = ref_inp.expand(expand_shape)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        res_out = inp.expand(expand_shape)
+
+    kernelgenbench_assert_close(res_out, ref_out, dtype)
+
+    # Benchmark: 性能测试
+    import triton
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    quantiles = [0.5, 0.2, 0.8]
+    ms_torch, _, _ = get_triton_testing().do_bench(lambda: ref_inp.clone().expand(expand_shape), rep=100, quantiles=quantiles)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        ms_triton, _, _ = get_triton_testing().do_bench(lambda: inp.clone().expand(expand_shape), rep=100, quantiles=quantiles)
+    speedup = ms_torch / ms_triton
+    result = CustomBenchmarkResult(ref_time=ms_torch, res_time=ms_triton, speedup=speedup)
+    return result
+
+
+@label("expand")
+@parametrize("dtype", FLOAT_DTYPES)
+def test_accuracy_expand_with_minus_one(dtype):
+    """Test expand with -1 to keep original size"""
+    inp = torch.randn(4, 1, 8, dtype=dtype, device=device)
+    ref_inp = to_reference(inp)
+    
+    # -1 means keep the original size
+    ref_out = ref_inp.expand(-1, 16, -1)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        res_out = inp.expand(-1, 16, -1)
+
+    kernelgenbench_assert_close(res_out, ref_out, dtype)
+
+    # Benchmark: 性能测试
+    import triton
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    quantiles = [0.5, 0.2, 0.8]
+    ms_torch, _, _ = get_triton_testing().do_bench(lambda: ref_inp.clone().expand(-1, 16, -1), rep=100, quantiles=quantiles)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        ms_triton, _, _ = get_triton_testing().do_bench(lambda: inp.clone().expand(-1, 16, -1), rep=100, quantiles=quantiles)
+    speedup = ms_torch / ms_triton
+    result = CustomBenchmarkResult(ref_time=ms_torch, res_time=ms_triton, speedup=speedup)
+    return result
+
+
+@label("expand_as")
+@parametrize(
+    "shape,other_shape",
+    [
+        ((1,), (8,)),
+        ((1, 16), (8, 16)),
+        ((1, 1, 32), (4, 8, 32)),
+        ((16, 1), (16, 32)),
+        ((1, 16, 1), (8, 16, 32)),
+    ]
+)
+@parametrize("dtype", FLOAT_DTYPES)
+def test_accuracy_expand_as(shape, other_shape, dtype):
+    """Test expand_as: expands tensor to the size of another tensor"""
+    inp = torch.randn(shape, dtype=dtype, device=device)
+    other = torch.randn(other_shape, dtype=dtype, device=device)
+    
+    ref_inp = to_reference(inp)
+    ref_other = to_reference(other)
+    
+    ref_out = ref_inp.expand_as(ref_other)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        res_out = inp.expand_as(other)
+
+    kernelgenbench_assert_close(res_out, ref_out, dtype)
+
+    # Benchmark: 性能测试
+    import triton
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    quantiles = [0.5, 0.2, 0.8]
+    ms_torch, _, _ = get_triton_testing().do_bench(lambda: ref_inp.clone().expand_as(ref_other), rep=100, quantiles=quantiles)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        ms_triton, _, _ = get_triton_testing().do_bench(lambda: inp.clone().expand_as(other), rep=100, quantiles=quantiles)
+    speedup = ms_torch / ms_triton
+    result = CustomBenchmarkResult(ref_time=ms_torch, res_time=ms_triton, speedup=speedup)
+    return result
+
+
+@label("exponential_")
+@parametrize("shape", DISTRIBUTION_SHAPES)
+@parametrize("dtype", FLOAT_DTYPES)
+def test_accuracy_exponential_(shape, dtype):
+    x = torch.empty(size=shape, dtype=dtype, device=device)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        x.exponential_()
+    assert x.min() > 0
+
+    # Benchmark: 性能测试
+    import triton
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    quantiles = [0.5, 0.2, 0.8]
+    ref_x_bench = torch.empty(size=shape, dtype=dtype, device="cpu" if TO_CPU else device)
+    x_bench = torch.empty(size=shape, dtype=dtype, device=device)
+    ms_torch, _, _ = get_triton_testing().do_bench(lambda: ref_x_bench.clone().exponential_(), rep=100, quantiles=quantiles)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        ms_triton, _, _ = get_triton_testing().do_bench(lambda: x_bench.clone().exponential_(), rep=100, quantiles=quantiles)
+    speedup = ms_torch / ms_triton
+    result = CustomBenchmarkResult(ref_time=ms_torch, res_time=ms_triton, speedup=speedup)
+    return result
+
+
+@label("fill_")
+@parametrize("value", [0, 1, 9])
+@parametrize("shape", POINTWISE_SHAPES)
+@parametrize("dtype", FLOAT_DTYPES)
+def test_accuracy_fill_(value, shape, dtype):
+    # Test fill_.Scalar
+    x = torch.ones(shape, device=device, dtype=dtype)
+    ref_x = to_reference(x.clone(), False)
+
+    ref_x.fill_(value)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        x.fill_(value)
+
+    kernelgenbench_assert_equal(x, ref_x)
+
+    # Test fill_.Tensor
+    x = torch.ones(shape, device=device, dtype=dtype)
+    ref_x = to_reference(x.clone(), False)
+    value_tensor = torch.tensor(value, device=device, dtype=dtype)
+    ref_value_tensor = to_reference(value_tensor)
+    ref_x.fill_(ref_value_tensor)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        x.fill_(value_tensor)
+
+    kernelgenbench_assert_equal(x, ref_x)
+
+    # Benchmark: 性能测试
+    import triton
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    quantiles = [0.5, 0.2, 0.8]
+    ref_x_bench = to_reference(torch.ones(shape, device=device, dtype=dtype), False)
+    x_bench = torch.ones(shape, device=device, dtype=dtype)
+    ms_torch, _, _ = get_triton_testing().do_bench(lambda: ref_x_bench.clone().fill_(value), rep=100, quantiles=quantiles)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        ms_triton, _, _ = get_triton_testing().do_bench(lambda: x_bench.clone().fill_(value), rep=100, quantiles=quantiles)
+    speedup = ms_torch / ms_triton
+    result = CustomBenchmarkResult(ref_time=ms_torch, res_time=ms_triton, speedup=speedup)
+    return result
+
+
+@label("resolve_conj")
+@parametrize("shape", SPECIAL_SHAPES)
+@parametrize("dtype", [torch.cfloat])
+def test_accuracy_resolve_conj(shape, dtype):
+    x = torch.randn(size=shape, dtype=dtype, device="cpu")
+    y = x.conj()
+    assert y.is_conj()
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        res_y = y.to(device=device)
+        z = res_y.resolve_conj()
+    assert not z.is_conj()
+
+    # Benchmark: 性能测试
+    import triton
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    quantiles = [0.5, 0.2, 0.8]
+    x_bench = torch.randn(size=shape, dtype=dtype, device="cpu")
+    y_bench = x_bench.conj()
+    res_y_bench = y_bench.to(device=device)
+    ms_torch, _, _ = get_triton_testing().do_bench(lambda: res_y_bench.resolve_conj(), rep=100, quantiles=quantiles)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        ms_triton, _, _ = get_triton_testing().do_bench(lambda: res_y_bench.resolve_conj(), rep=100, quantiles=quantiles)
+    speedup = ms_torch / ms_triton
+    result = CustomBenchmarkResult(ref_time=ms_torch, res_time=ms_triton, speedup=speedup)
+    return result
+
+
+@label("resolve_neg")
+@parametrize("shape", SPECIAL_SHAPES)
+@parametrize("dtype", [torch.cfloat])
+def test_accuracy_resolve_neg(shape, dtype):
+    if VENDOR_NAME == "ascend":
+        x = torch.randn(size=shape, dtype=dtype).to(device=device)
+    else:
+        x = torch.randn(size=shape, dtype=dtype, device=device)
+    y = x.conj()
+    z = y.imag
+    assert z.is_neg()
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        out = z.resolve_neg()
+    assert not out.is_neg()
+
+    # Benchmark: 性能测试
+    import triton
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    quantiles = [0.5, 0.2, 0.8]
+    if VENDOR_NAME == "ascend":
+        x_bench = torch.randn(size=shape, dtype=dtype).to(device=device)
+    else:
+        x_bench = torch.randn(size=shape, dtype=dtype, device=device)
+    y_bench = x_bench.conj()
+    z_bench = y_bench.imag
+    ms_torch, _, _ = get_triton_testing().do_bench(lambda: z_bench.resolve_neg(), rep=100, quantiles=quantiles)
+    with kernelgenbench.use_ops(REGISTERED_OPS):
+        ms_triton, _, _ = get_triton_testing().do_bench(lambda: z_bench.resolve_neg(), rep=100, quantiles=quantiles)
+    speedup = ms_torch / ms_triton
+    result = CustomBenchmarkResult(ref_time=ms_torch, res_time=ms_triton, speedup=speedup)
+    return result
