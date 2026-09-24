@@ -135,6 +135,44 @@ python scripts/analyze/analyze.py agent_bench/runs/<run_dir>/
 ```
 
 
+## Validation-Policy Robustness
+
+The correctness and performance protocol is fixed, but its two most consequential
+design choices can be varied without re-invoking any model, so that already
+generated kernels can be re-verified under alternative policies. All switches
+default to the published protocol.
+
+| Variable | Values | Effect |
+|---|---|---|
+| `KGB_ATOL_MODE` | `scaled` (default), `sqrt`, `const` | Absolute tolerance `1e-4 * D_reduce` (published), `1e-4 * sqrt(D_reduce)`, or a constant `1e-4`. |
+| `KGB_HELDOUT` | `0` (default), `1` | Appends held-out shapes and strides that are never exposed to the generator or to the agent, mirroring the published grids in tensor rank and layout family. |
+| `KGB_SEED_OFFSET` | integer, default `0` | Shifts the verification seed, so a run also sees different input values. |
+| `KGB_TIMING_MODE` | `clone` (default), `clone_free` | `clone_free` removes the per-call input clone that the parameterised tests place inside the timed region. Operators that mutate their inputs are detected automatically and keep the clone. |
+| `KGB_AUDIT` | file path | Records, for every comparison that passes, the smallest `atol` that would still accept it. One baseline pass therefore yields the outcome of a whole family of tolerance rules. |
+
+Re-verify a corpus of previously accepted kernels under any of these policies:
+
+```bash
+# Published protocol, with a per-comparison tolerance audit
+python scripts/analyze/reverify_corpus.py \
+    --kernels <dir-of-namespace__op.py> --policy baseline \
+    --out runs/baseline.json --audit-dir runs/audit --jobs 8
+
+# Held-out shapes/strides and a fresh input seed
+python scripts/analyze/reverify_corpus.py \
+    --kernels <dir> --policy heldout --out runs/heldout.json --jobs 8
+
+# Summarise into the tables reported in the paper
+python scripts/analyze/summarize_reverify.py \
+    --baseline runs/baseline.json --heldout runs/heldout.json \
+    --out runs/summary.md
+```
+
+`reverify_corpus.py` accepts kernels from all three sources in one corpus; file
+names follow `<namespace>__<operator>.py` (`aten__softmax.py`,
+`cublas__cublasSgemm_v2.py`, `vllm13__rms_norm.py`).
+
+
 ## Reproducibility Notes
 
 The paper's reported rates aggregate 110 or 210 operator outcomes. Most costly agent configurations use a single generation trajectory, whereas kernel timing uses warm-up and repeated measurement. Reproducing a complete table requires access to the corresponding model or agent APIs and can incur substantial token and wall-clock cost; the single-operator commands above validate the released task, generation, and verification pipeline at low cost.
