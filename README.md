@@ -155,10 +155,10 @@ python scripts/analyze/analyze.py agent_bench/runs/<run_dir>/
 
 ## Validation-Policy Robustness
 
-Three validation policies can be varied without re-invoking a model: numerical
-tolerance, held-out inputs, and input-clone timing. The switches below default
-to the published protocol, and the candidates in
-`reproducibility/reference_candidates/` can be re-verified under any of them.
+Two validation policies can be varied without re-invoking a model: numerical
+tolerance and held-out inputs. The switches below default to the published
+protocol, and the candidates in `reproducibility/reference_candidates/` can be
+re-verified under either of them.
 The held-out grids add shapes and strides that are never exposed to the
 generator or to the agent, so the same candidates can be checked outside the
 published grids at no generation cost.
@@ -168,7 +168,6 @@ published grids at no generation cost.
 | `KGB_ATOL_MODE` | `scaled` (default), `sqrt`, `const` | Absolute tolerance `1e-4 * D_reduce` (published), `1e-4 * sqrt(D_reduce)`, or a constant `1e-4`. |
 | `KGB_HELDOUT` | `0` (default), `1` | Appends held-out shapes and strides that are never exposed to the generator or to the agent, mirroring the published grids in tensor rank and layout family. |
 | `KGB_SEED_OFFSET` | integer, default `0` | Shifts the verification seed, so a run also sees different input values. |
-| `KGB_TIMING_MODE` | `clone` (default), `clone_free` | `clone_free` removes the per-call input clone that the parameterised tests place inside the timed region. Operators that mutate their inputs are detected automatically and keep the clone. |
 | `KGB_AUDIT` | file path | Records, for every comparison that passes, the smallest `atol` that would still accept it. One baseline pass therefore yields the outcome of a whole family of tolerance rules. |
 
 Re-verify a corpus of previously accepted kernels under any of these policies.
@@ -183,10 +182,6 @@ python scripts/analyze/reverify_corpus.py \
     --kernels $K --policy baseline \
     --out runs/baseline.json --audit-dir runs/audit --jobs 8
 
-# Clone-free timing (needed by the summary command below)
-python scripts/analyze/reverify_corpus.py \
-    --kernels $K --policy clone_free --out runs/clone_free.json --jobs 8
-
 # Held-out shapes/strides and a fresh input seed
 python scripts/analyze/reverify_corpus.py \
     --kernels $K --policy heldout --out runs/heldout.json --jobs 8
@@ -194,16 +189,11 @@ python scripts/analyze/reverify_corpus.py \
 # Summarise the outputs from this suite version
 python scripts/analyze/summarize_reverify.py \
     --baseline runs/baseline.json --heldout runs/heldout.json \
-    --clone-free runs/clone_free.json \
     --tolerance-bound runs/tolerance_bound.json \
-    --timing-clone-cost runs/timing_clone_cost.json \
     --out runs/summary.md
 
 # Bound on the error each tolerance rule admits, on the published test cases
 python scripts/analyze/tolerance_bound_probe.py --out runs/tolerance_bound.json
-
-# Cost of the in-timed-region clone and the speedup it reports
-python scripts/analyze/timing_clone_cost.py --out runs/timing_clone_cost.json
 ```
 
 `reverify_corpus.py` accepts kernels from all three sources in one corpus; file
@@ -233,9 +223,6 @@ appendix numbers:
   suites: 1,681 published and 2,530 held-out test cases in total. Per-candidate
   counts and file hashes are in
   `reproducibility/reference_candidates/manifest.json`.
-- **Timing.** `timing_clone_cost.py` reports the per-call input copy at 29-61%
-  of the measured latency on the published shapes, and the clone-free arm
-  re-measures the same candidates with the copy removed.
 
 The solution corpus behind the main tables is not bundled, and none of the
 commands above invokes a model.

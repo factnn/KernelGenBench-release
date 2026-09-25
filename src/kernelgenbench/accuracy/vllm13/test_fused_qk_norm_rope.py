@@ -62,7 +62,7 @@ def test_accuracy_fused_qk_norm_rope(seq_len, heads, head_dim, dtype, is_neox):
 
     ms_baseline = triton.testing.do_bench(
         lambda: kernelgenbench.baseline.fused_qk_norm_rope(
-            qkv_bench.clone(), num_heads_q, num_heads_k, num_heads_v, head_dim, eps,
+            qkv_bench, num_heads_q, num_heads_k, num_heads_v, head_dim, eps,
             q_weight, k_weight, cos_sin_cache, is_neox, position_ids
         ),
         warmup=25, rep=100
@@ -70,7 +70,7 @@ def test_accuracy_fused_qk_norm_rope(seq_len, heads, head_dim, dtype, is_neox):
 
     ms_triton = triton.testing.do_bench(
         lambda: kernelgenbench.triton.fused_qk_norm_rope(
-            qkv_bench.clone(), num_heads_q, num_heads_k, num_heads_v, head_dim, eps,
+            qkv_bench, num_heads_q, num_heads_k, num_heads_v, head_dim, eps,
             q_weight, k_weight, cos_sin_cache, is_neox, position_ids
         ),
         warmup=25, rep=100

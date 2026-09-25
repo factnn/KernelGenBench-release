@@ -70,14 +70,14 @@ def test_accuracy_gather_and_maybe_dequant_cache(config):
 
     ms_baseline = triton.testing.do_bench(
         lambda: kernelgenbench.baseline.gather_and_maybe_dequant_cache(
-            src_bench, dst_bench.clone(), block_table, cu_seq, token_to_seq,
+            src_bench, dst_bench, block_table, cu_seq, token_to_seq,
             total_tokens, "auto", scale),
         warmup=25, rep=100
     )
 
     ms_triton = triton.testing.do_bench(
         lambda: kernelgenbench.triton.gather_and_maybe_dequant_cache(
-            src_bench, dst_bench.clone(), block_table, cu_seq, token_to_seq,
+            src_bench, dst_bench, block_table, cu_seq, token_to_seq,
             total_tokens, "auto", scale),
         warmup=25, rep=100
     )

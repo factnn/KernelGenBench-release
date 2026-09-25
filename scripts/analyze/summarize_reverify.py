@@ -4,13 +4,11 @@
 Inputs produced by scripts/analyze/reverify_corpus.py:
   baseline.json   published protocol (+ per-comparison tolerance audit)
   heldout.json    published shapes + held-out shapes/strides and a fresh seed
-  clone_free.json published protocol with the in-timed-region clone removed
 
 Usage:
   python scripts/analyze/summarize_reverify.py \
       --baseline runs/baseline_gpus0123.json \
       --heldout  runs/heldout_gpus4567.json \
-      [--clone-free runs/clone_free.json] \
       --out runs/summary.md
 """
 
@@ -51,17 +49,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--baseline", required=True)
     ap.add_argument("--heldout", default=None)
-    ap.add_argument("--clone-free", dest="clone_free", default=None)
     ap.add_argument("--tolerance-bound", dest="tolerance_bound", default=None)
-    ap.add_argument("--timing-clone-cost", dest="timing_clone_cost", default=None)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
     base = by_op(load(args.baseline))
     held = by_op(load(args.heldout))
-    clon = by_op(load(args.clone_free))
     bound = load(args.tolerance_bound)
-    tcost = load(args.timing_clone_cost)
 
     lines = []
     add = lines.append
@@ -152,39 +146,6 @@ def main():
             add("**Every kernel that passes the published suite also passes the "
                 "held-out suite.**\n")
 
-    # ---------------------------------------------------------------- M7
-    if clon:
-        add("\n## 3. Clone-free timing sensitivity (M7)\n")
-        pairs = []
-        for op, r in clon.items():
-            b = base.get(op)
-            if not b or not b.get("passed") or not r.get("passed"):
-                continue
-            s_clone = b.get("speedup")
-            s_free = r.get("speedup")
-            if isinstance(s_clone, (int, float)) and isinstance(s_free, (int, float)) \
-                    and s_clone > 0 and s_free > 0:
-                pairs.append((op, s_clone, s_free, r.get("passed")))
-        add(f"Operators with a comparable speedup in both timing modes: "
-            f"**{len(pairs)}**\n")
-        if pairs:
-            ratio = [f / c for _, c, f, _ in pairs]
-            gm = math.exp(sum(math.log(x) for x in ratio) / len(ratio))
-            moved = [p for p in pairs if (p[3] is not None and
-                                          (p[3] and p[2] > 0))]
-            add("| operator | speedup (published) | speedup (clone-free) | ratio |")
-            add("|---|---|---|---|")
-            for op, c, f, _ in sorted(pairs, key=lambda p: -(p[2] / p[1])):
-                add(f"| `{op}` | {fnum(c)}x | {fnum(f)}x | {fnum(f / c)}x |")
-            add("")
-            add(f"Geometric-mean ratio (clone-free / published): **{fnum(gm)}x**\n")
-            below = sum(1 for _, c, _, _ in pairs if c < 1.0)
-            below_free = sum(1 for _, _, f, _ in pairs if f < 1.0)
-            add(f"- operators measured below 1.0x with the published protocol: "
-                f"**{below}/{len(pairs)}**")
-            add(f"- operators measured below 1.0x with clone-free timing: "
-                f"**{below_free}/{len(pairs)}**\n")
-
     # ------------------------------------------------- tolerance bound probe
     if bound:
         add("\n## 1b. How much error each tolerance rule admits (probe)\n")
@@ -211,32 +172,3 @@ def main():
                 "passes all three rules for: " + ", ".join(f"`{o}`" for o in ok) +
                 ". Tightening the rule therefore does not reject legitimate "
                 "kernels on these cases.\n")
-
-    # ---------------------------------------------------- clone cost + distortion
-    if tcost:
-        add("\n## 3b. Why the clone compresses speedups\n")
-        add("Fixed overhead that the harness adds to *both* the reference and the "
-            "candidate measurement, and the speedup it reports for a kernel that "
-            "is genuinely 2x the reference.\n")
-        add("| operator | measured (harness) | kernel only | overhead | "
-            "overhead share | a true 2.00x is reported as |")
-        add("|---|---|---|---|---|---|")
-        for c in tcost.get("cases", []):
-            two = next((d for d in c["distortion"]
-                        if abs(d["true_speedup"] - 2.0) < 1e-9), None)
-            add(f"| `{c['op']}` | {c['ms_clone_inclusive']:.4f} ms | "
-                f"{c['ms_clone_free']:.4f} ms | {c['effective_overhead']:.4f} ms | "
-                f"{100 * c['overhead_share_of_measured_latency']:.1f}% | "
-                f"{two['reported_speedup']:.3f}x |" if two else
-                f"| `{c['op']}` | {c['ms_clone_inclusive']:.4f} ms | - | - | - | - |")
-        add("")
-
-    out = Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text("\n".join(lines) + "\n")
-    print("\n".join(lines))
-    print(f"\nwrote {out}")
-
-
-if __name__ == "__main__":
-    main()

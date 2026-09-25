@@ -12,9 +12,6 @@ Policies (see ``src/sandbox/utils/accuracy_utils.py`` for the switches):
   atol_const   atol = 1e-4 regardless of reduction length
   atol_sqrt    atol = 1e-4 * sqrt(D_reduce)
   heldout      published shapes + held-out shapes/strides and a fresh seed
-  clone_free   published protocol, but the per-call input clone is removed
-               from the timed region (in-place operators are auto-detected and
-               keep the clone)
 
 Usage:
   python scripts/analyze/reverify_corpus.py \
@@ -49,7 +46,6 @@ POLICIES = {
     "atol_const": {"KGB_ATOL_MODE": "const"},
     "atol_sqrt": {"KGB_ATOL_MODE": "sqrt"},
     "heldout": {"KGB_HELDOUT": "1", "KGB_SEED_OFFSET": "1000"},
-    "clone_free": {"KGB_TIMING_MODE": "clone_free"},
 }
 
 # file names are "<namespace>__<operator>.py"
@@ -67,7 +63,7 @@ def run_one(item, policy_env, python, gpu, timeout, extra_env):
     kernel_path, namespace, operator = item
     env = os.environ.copy()
     for name in ("KGB_ATOL_MODE", "KGB_HELDOUT", "KGB_SEED_OFFSET",
-                 "KGB_TIMING_MODE", "KGB_AUDIT", "KGB_VERIFY_DIR"):
+                 "KGB_AUDIT", "KGB_VERIFY_DIR"):
         env.pop(name, None)
     env.update(policy_env)
     env.update(extra_env)

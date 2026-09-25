@@ -29,9 +29,8 @@ import torch
 # These switches exist so that the *published* protocol can be re-run under
 # alternative validation policies without changing the default behaviour.  With
 # every switch left at its default the module reproduces the paper protocol
-# bit-for-bit; the alternatives are used by the robustness analyses in
-# scripts/analyze/ (tolerance sensitivity, held-out-shape generalization, and
-# clone-free timing).
+# bit-for-bit; the alternatives are used by the analyses in scripts/analyze/
+# (tolerance sensitivity and held-out-shape generalization).
 #
 #   KGB_ATOL_MODE    scaled | const | sqrt     (default: scaled)
 #                    scaled -> atol = 1e-4 * D_reduce            (paper protocol)
@@ -41,17 +40,11 @@ import torch
 #                    exposed to the generator or the agent (default: off)
 #   KGB_SEED_OFFSET  integer added to the verification seed, so that held-out
 #                    runs also see different input *values* (default: 0)
-#   KGB_TIMING_MODE  clone | clone_free        (default: clone)
-#                    clone_free removes the per-call ``.clone()`` that the
-#                    parameterised tests place inside the timed region, for
-#                    operators that do not mutate their inputs.  Operators that
-#                    do mutate their inputs keep the clone automatically.
 # ==============================================================================
 
 ATOL_MODE = os.environ.get("KGB_ATOL_MODE", "scaled").strip().lower()
 HELDOUT_MODE = os.environ.get("KGB_HELDOUT", "0") == "1"
 SEED_OFFSET = int(os.environ.get("KGB_SEED_OFFSET", "0"))
-TIMING_MODE = os.environ.get("KGB_TIMING_MODE", "clone").strip().lower()
 # When KGB_AUDIT points at a directory, every comparison that passes the
 # published tolerance also records how much tolerance it actually needed, and
 # ``reverify_corpus.py --audit-dir`` turns that record into the pass/fail
@@ -60,8 +53,6 @@ AUDIT_PATH = os.environ.get("KGB_AUDIT", "").strip()
 
 if ATOL_MODE not in ("scaled", "const", "sqrt"):
     raise ValueError(f"Unknown KGB_ATOL_MODE: {ATOL_MODE!r}")
-if TIMING_MODE not in ("clone", "clone_free"):
-    raise ValueError(f"Unknown KGB_TIMING_MODE: {TIMING_MODE!r}")
 
 
 def audit(record: dict) -> None:
@@ -75,6 +66,13 @@ def audit(record: dict) -> None:
             handle.write(_json.dumps(record) + "\n")
     except Exception:
         pass
+
+def heldout_params(default, extra):
+    """Parameter grid used by a test: the published values, plus the held-out
+    values that KGB_HELDOUT appends and that are never exposed to the generator
+    or to the agent."""
+    return list(default) + list(extra) if HELDOUT_MODE else list(default)
+
 
 class CustomBenchmarkResult(BaseModel):
     ref_time: float
@@ -464,72 +462,3 @@ def init_seed(seed):
         torch.cuda.manual_seed_all(seed)
 
 
-# ==============================================================================
-# Clone-free timing (KGB_TIMING_MODE=clone_free)
-# ==============================================================================
-# Most parameterised tests place a defensive ``inp.clone()`` *inside* the timed
-# region, e.g. ``do_bench(lambda: torch.sum(inp.clone()))``.  The clone is
-# required for operators that mutate their inputs, but for every other operator
-# it is a fixed memory-bound cost that is added to both the reference and the
-# candidate measurement and therefore compresses the reported speedup towards
-# 1.0.  When KGB_TIMING_MODE=clone_free we wrap ``triton.testing.do_bench`` so
-# that ``Tensor.clone`` returns the tensor itself for the duration of the timed
-# call.  Before doing so we execute the callable once and watch the tensors'
-# version counters: if the operator mutates any of its inputs, the clone is
-# semantically required and we fall back to the unmodified measurement.  This
-# keeps in-place operators on exactly the published protocol.
-
-
-def heldout_params(default, extra):
-    """Parameter grid used by a test: published values, plus the held-out values
-    appended when KGB_HELDOUT is enabled (never exposed to generator or agent)."""
-    return list(default) + list(extra) if HELDOUT_MODE else list(default)
-
-
-def _install_clone_free_timing():
-    try:
-        import triton.testing as _triton_testing
-    except Exception:  # triton unavailable: nothing to patch
-        return
-
-    original = _triton_testing.do_bench
-    if getattr(original, "_kgb_clone_free", False):
-        return
-
-    def _clone_free_do_bench(fn, *args, **kwargs):
-        real_clone = torch.Tensor.clone
-        recorded = []
-        probing = True
-
-        def _identity_clone(self, *a, **k):
-            if probing:
-                recorded.append((self, self._version))
-            return self
-
-        torch.Tensor.clone = _identity_clone
-        try:
-            try:
-                fn()  # trial execution, untimed
-            except Exception:
-                # Never mask a real failure: fall back to the standard path.
-                torch.Tensor.clone = real_clone
-                return original(fn, *args, **kwargs)
-
-            mutates_input = any(
-                tensor._version != version for tensor, version in recorded
-            )
-            if mutates_input or not recorded:
-                torch.Tensor.clone = real_clone
-                return original(fn, *args, **kwargs)
-
-            probing = False
-            return original(fn, *args, **kwargs)
-        finally:
-            torch.Tensor.clone = real_clone
-
-    _clone_free_do_bench._kgb_clone_free = True
-    _triton_testing.do_bench = _clone_free_do_bench
-
-
-if TIMING_MODE == "clone_free":
-    _install_clone_free_timing()

@@ -350,15 +350,6 @@ def _convert_single_test_func(code: str) -> str:
     return '\n'.join(new_lines)
 
 
-def _add_clones_to_call(call: str) -> str:
-    """Add .clone() to all ref_xxx and act_xxx variables in the call."""
-    # Replace ref_xxx with ref_xxx.clone()
-    call = re.sub(r'\b(ref_\w+)\b(?!\.clone)', r'\1.clone()', call)
-    # Replace act_xxx with act_xxx.clone()
-    call = re.sub(r'\b(act_\w+)\b(?!\.clone)', r'\1.clone()', call)
-    return call
-
-
 def load_right_kernel_code_from_acc_verify_dir(path: Path, get_success: bool = True) -> Dict[str, str]:
     # check the path is dir or file
     # breakpoint()

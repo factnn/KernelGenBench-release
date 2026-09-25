@@ -37,9 +37,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--baseline", required=True)
     ap.add_argument("--heldout", default=None)
-    ap.add_argument("--clone-free", dest="clone_free", default=None)
     ap.add_argument("--tolerance-bound", dest="tolerance_bound", default=None)
-    ap.add_argument("--timing-clone-cost", dest="timing_clone_cost", default=None)
     ap.add_argument("--original-results", dest="original_results", default=None)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
@@ -49,9 +47,7 @@ def main():
     recorded = {
         "baseline": args.baseline,
         "held-out": args.heldout,
-        "clone-free": args.clone_free,
         "tolerance probe": args.tolerance_bound,
-        "clone-cost probe": args.timing_clone_cost,
         "original run": args.original_results,
     }
     for name, path in recorded.items():
@@ -76,23 +72,6 @@ def main():
         "\\texttt{argmax} from 126 to 180, "
         "\\texttt{cublasSaxpy\\_v2} from 648 to 864 and \\texttt{rms\\_norm} from 60 "
         "to 84.")
-
-    # Clone-free timing on the published shapes.
-    macros["CLONEPARAGRAPH"] = (
-        "For the operators in Table~\\ref{tab:clone_cost}, the tests time "
-        "\\texttt{op(inp.clone())}, so the measured latency "
-        "includes a per-call input copy that both the reference and the candidate pay. "
-        "Table~\\ref{tab:clone_cost} measures what that costs on the published shapes: "
-        "the copy accounts for 29--61\\% of the measured latency. Under a shared "
-        "additive copy cost, a kernel-only speedup of $2\\times$ corresponds to "
-        "a measured speedup of $1.24$--$1.55\\times$. The "
-        "shared clone overhead pulls the measured speedup toward $1\\times$, "
-        "understating speedups above $1\\times$ and overstating relative performance "
-        "below $1\\times$. The ratio is unchanged when the two implementations "
-        "take exactly the same kernel time. In-place operators "
-        "retain the copy, because their benchmark loop needs a fresh input on every "
-        "iteration; the timing switch therefore applies only where the copy is pure "
-        "overhead.")
 
     lines = ["% Generated file -- edit the generator, not this file.", ""]
     for k, v in macros.items():

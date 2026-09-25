@@ -29,16 +29,13 @@ $PY scripts/analyze/reverify_corpus.py --kernels $K --policy baseline \
 $PY scripts/analyze/reverify_corpus.py --kernels $K --policy heldout \
     --out runs/ref_heldout.json --jobs 8 --gpus 0,1,2,3
 
-# 3. Clone-free timing.
-$PY scripts/analyze/reverify_corpus.py --kernels $K --policy clone_free \
-    --out runs/ref_clone_free.json --jobs 8 --gpus 0,1,2,3
 ```
 
-No model is invoked by any of the three commands. The policy switches they set
-(`KGB_ATOL_MODE`, `KGB_HELDOUT`, `KGB_SEED_OFFSET`, `KGB_TIMING_MODE`,
-`KGB_AUDIT`) are described in the top-level `README.md`.
+No model is invoked by either command. The policy switches they set
+(`KGB_ATOL_MODE`, `KGB_HELDOUT`, `KGB_SEED_OFFSET`, `KGB_AUDIT`) are described
+in the top-level `README.md`.
 
-## What the three arms measure
+## What the two arms measure
 
 - **Tolerance.** Re-verifying the 20 candidates with `KGB_AUDIT` set records
   1,153 passing floating-point comparisons across 9 candidates. The largest
@@ -51,10 +48,6 @@ No model is invoked by any of the three commands. The policy switches they set
   rather than a new random draw alone, and all 20 still pass. Counts per
   candidate are in `reference_candidates/manifest.json`, and the exact grids are
   in `src/kernelgenbench/accuracy/`.
-- **Timing.** `scripts/analyze/timing_clone_cost.py` measures the per-call input
-  copy that the parameterised tests place inside the timed region; the clone-free
-  arm re-measures the same candidates with that copy removed. In-place operators
-  are detected automatically and keep the copy.
 
 ## Environment
 

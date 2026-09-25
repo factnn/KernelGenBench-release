@@ -57,16 +57,16 @@ def test_accuracy_rms_norm_dynamic_per_token_quant(tokens, hidden_size, dtype, q
 
     ms_baseline = triton.testing.do_bench(
         lambda: kernelgenbench.baseline.rms_norm_dynamic_per_token_quant(
-            x_bench.clone(), w_bench, float(epsilon), quant_dtype, None,
-            residual_bench.clone() if residual_bench is not None else None
+            x_bench, w_bench, float(epsilon), quant_dtype, None,
+            residual_bench if residual_bench is not None else None
         ),
         warmup=25, rep=100
     )
 
     ms_triton = triton.testing.do_bench(
         lambda: kernelgenbench.triton.rms_norm_dynamic_per_token_quant(
-            x_bench.clone(), w_bench, float(epsilon), quant_dtype, None,
-            residual_bench.clone() if residual_bench is not None else None
+            x_bench, w_bench, float(epsilon), quant_dtype, None,
+            residual_bench if residual_bench is not None else None
         ),
         warmup=25, rep=100
     )
