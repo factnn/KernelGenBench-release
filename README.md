@@ -131,10 +131,9 @@ current names, and the vendor branches are reduced to the NVIDIA path this
 artifact targets. Every ATen operator covered by the paper's run now has a test
 in this artifact.
 
-**Validation-policy switches.** See *Validation-Policy Robustness* below: the
-tolerance rule, the test grids and the timing protocol can be varied without
-re-invoking any model, so already generated kernels can be re-verified under
-alternative policies.
+**Held-out grids.** See *Held-Out Verification* below: the test grids and the
+input seed can be varied without re-invoking any model, so already generated
+kernels can be re-verified on inputs the generator never saw.
 
 ## Verification Protocol
 
@@ -153,24 +152,22 @@ python scripts/analyze/analyze.py agent_bench/runs/<run_dir>/
 ```
 
 
-## Validation-Policy Robustness
+## Held-Out Verification
 
 The verification grid can be varied without re-invoking a model: the switch
-below appends held-out inputs to the published test cases, and the candidates in
-`reproducibility/reference_candidates/` can be re-verified with or without
-them.
-The held-out grids add shapes and strides that are never exposed to the
-generator or to the agent, so the same candidates can be checked outside the
-published grids at no generation cost.
+below appends held-out inputs to the published test cases, so the candidates in
+`reproducibility/reference_candidates/` can be re-verified on shapes and strides
+that are never exposed to the generator or to the agent. The held-out grids
+mirror the published grids in tensor rank and layout family.
 
 | Variable | Values | Effect |
 |---|---|---|
 | `KGB_HELDOUT` | `0` (default), `1` | Appends held-out shapes and strides that are never exposed to the generator or to the agent, mirroring the published grids in tensor rank and layout family. |
 | `KGB_SEED_OFFSET` | integer, default `0` | Shifts the verification seed, so a run also sees different input values. |
-| `KGB_AUDIT` | file path | Records, for every comparison that passes, the smallest `atol` that would still accept it. One baseline pass therefore yields the outcome of a whole family of tolerance rules. |
+| `KGB_AUDIT` | file path | Records, for every comparison that passes, the smallest `atol` that would still accept it, so one baseline pass reports how much tolerance each comparison actually needed. |
 
-Re-verify a corpus of previously accepted kernels under any of these policies.
-The commands below use the shipped reference candidates; any directory of
+Re-verify a corpus of previously accepted kernels with or without the held-out
+grids. The commands below use the shipped reference candidates; any directory of
 `<namespace>__<operator>.py` files works the same way.
 
 ```bash
