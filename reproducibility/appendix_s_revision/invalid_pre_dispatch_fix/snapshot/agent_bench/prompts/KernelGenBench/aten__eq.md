@@ -1,0 +1,177 @@
+# Triton Kernel Implementation Task
+
+You need to implement a Triton kernel for a PyTorch operator.
+
+## Task Information
+
+- **Operator**: eq
+- **Full Name**: aten::eq
+- **GPU ID**: 0
+
+## Environment
+
+- All GPU commands must be prefixed with `CUDA_VISIBLE_DEVICES=0`
+- Python path: `python`
+
+## Operator Specification
+
+### Function Signatures
+
+- `eq.Tensor`: aten::eq.Tensor(Tensor self, Tensor other) -> Tensor
+- `eq.Scalar`: aten::eq.Scalar(Tensor self, Scalar other) -> Tensor
+- `eq.Scalar_out`: aten::eq.Scalar_out(Tensor self, Scalar other, *, Tensor(a!) out) -> Tensor(a!)
+- `eq.Tensor_out`: aten::eq.Tensor_out(Tensor self, Tensor other, *, Tensor(a!) out) -> Tensor(a!)
+- `eq.int_list`: aten::eq.int_list(int[] a, int[] b) -> bool
+- `eq.device`: aten::eq.device(Device a, Device b) -> bool
+- `eq.bool`: aten::eq.bool(bool a, bool b) -> bool
+- `eq.enum`: aten::eq.enum(AnyEnumType a, AnyEnumType b) -> bool
+- `eq.int`: aten::eq.int(int a, int b) -> bool
+- `eq.complex`: aten::eq.complex(complex a, complex b) -> bool
+- `eq.float`: aten::eq.float(float a, float b) -> bool
+- `eq.int_float`: aten::eq.int_float(int a, float b) -> bool
+- `eq.float_int`: aten::eq.float_int(float a, int b) -> bool
+- `eq.float_complex`: aten::eq.float_complex(float a, complex b) -> bool
+- `eq.complex_float`: aten::eq.complex_float(complex a, float b) -> bool
+- `eq`: aten::eq(Scalar a, Scalar b) -> bool
+- `eq.str`: aten::eq.str(str a, str b) -> bool
+- `eq.float_list`: aten::eq.float_list(float[] a, float[] b) -> bool
+- `eq.Tensor_list`: aten::eq.Tensor_list(Tensor[] a, Tensor[] b) -> bool
+- `eq.bool_list`: aten::eq.bool_list(bool[] a, bool[] b) -> bool
+- `eq.str_list`: aten::eq.str_list(str[] a, str[] b) -> bool
+
+### Interfaces to Implement
+
+- `eq.Tensor` (autograd: disable)
+- `eq.Scalar` (autograd: disable)
+- `eq.Scalar_out` (autograd: disable)
+- `eq.Tensor_out` (autograd: disable)
+- `eq.int_list` (autograd: disable)
+- `eq.device` (autograd: disable)
+- `eq.bool` (autograd: disable)
+- `eq.enum` (autograd: disable)
+- `eq.int` (autograd: disable)
+- `eq.complex` (autograd: disable)
+- `eq.float` (autograd: disable)
+- `eq.int_float` (autograd: disable)
+- `eq.float_int` (autograd: disable)
+- `eq.float_complex` (autograd: disable)
+- `eq.complex_float` (autograd: disable)
+- `eq` (autograd: disable)
+- `eq.str` (autograd: disable)
+- `eq.float_list` (autograd: disable)
+- `eq.Tensor_list` (autograd: disable)
+- `eq.bool_list` (autograd: disable)
+- `eq.str_list` (autograd: disable)
+
+### Input/Output Arguments
+
+```
+aten::eq.Tensor(Tensor self, Tensor other) -> Tensor
+```
+
+## Implementation Requirements
+
+### 1. Code Structure
+
+Your implementation must include:
+1. **Triton kernel function**: core computation logic decorated with `@triton.jit`
+2. **Python wrapper functions**: one for each ATen interface variant
+
+### 2. Key Requirements
+
+**Must handle:**
+- **Broadcasting**: support inputs with different shapes following PyTorch broadcast semantics
+- **Non-contiguous tensors**: do not assume inputs are contiguous, use correct stride calculations
+- **All overload variants**: implement every listed interface variant
+
+**Naming convention:**
+- Wrapper function names must match ATen operator names
+- Replace `.` with `_` (e.g. `add.Tensor` → `add_Tensor`)
+
+### 3. Precision Requirements
+
+- For float16/bfloat16 inputs, accumulate internally in float32
+- Use `allow_tf32=False` for matrix operations to maintain precision
+
+## Example
+
+Implementation example for the `add` operator:
+
+```python
+import torch
+import triton
+import triton.language as tl
+
+
+@triton.jit
+def add_kernel(
+    x_ptr, y_ptr, output_ptr,
+    n_elements,
+    BLOCK_SIZE: tl.constexpr,
+):
+    pid = tl.program_id(axis=0)
+    block_start = pid * BLOCK_SIZE
+    offsets = block_start + tl.arange(0, BLOCK_SIZE)
+    mask = offsets < n_elements
+
+    x = tl.load(x_ptr + offsets, mask=mask)
+    y = tl.load(y_ptr + offsets, mask=mask)
+    output = x + y
+
+    tl.store(output_ptr + offsets, output, mask=mask)
+
+
+def add_Tensor(self: torch.Tensor, other: torch.Tensor, alpha: float = 1) -> torch.Tensor:
+    """Implements aten::add.Tensor"""
+    # Handle broadcasting
+    self, other = torch.broadcast_tensors(self, other)
+    # Ensure contiguity
+    self = self.contiguous()
+    other = other.contiguous()
+
+    output = torch.empty_like(self)
+    n_elements = output.numel()
+
+    grid = lambda meta: (triton.cdiv(n_elements, meta['BLOCK_SIZE']),)
+
+    # Handle alpha
+    if alpha != 1:
+        other = other * alpha
+
+    add_kernel[grid](self, other, output, n_elements, BLOCK_SIZE=1024)
+
+    return output
+
+
+def add_Scalar(self: torch.Tensor, other: float, alpha: float = 1) -> torch.Tensor:
+    """Implements aten::add.Scalar"""
+    return add_Tensor(self, torch.full_like(self, other), alpha)
+
+
+def add_out(self: torch.Tensor, other: torch.Tensor, alpha: float = 1, *, out: torch.Tensor) -> torch.Tensor:
+    """Implements aten::add.out"""
+    result = add_Tensor(self, other, alpha)
+    out.copy_(result)
+    return out
+```
+
+## Output Requirements
+
+**Important**: Output the complete Python code directly in your reply:
+
+1. Code must be wrapped in a ```python ... ``` code block
+2. Code must be runnable as-is, without modification
+3. Do not include test code or benchmark code
+4. Do not add extra explanations, output only the code block
+5. **Do not write code to a file**, output it directly in your reply
+
+Example output format:
+```python
+import torch
+import triton
+import triton.language as tl
+
+# Your implementation...
+```
+
+

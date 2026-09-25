@@ -155,10 +155,12 @@ python scripts/analyze/analyze.py agent_bench/runs/<run_dir>/
 
 ## Validation-Policy Robustness
 
-The correctness and performance protocol is fixed, but its two most consequential
-design choices can be varied without re-invoking any model, so that already
-generated kernels can be re-verified under alternative policies. All switches
-default to the published protocol.
+Three validation policies can be varied without re-invoking a model. These
+checks use the current released test suite; their defaults define the appendix
+baseline, not an exact reconstruction of the historical main-table tests.
+The recorded 152-operator corpus includes candidates that failed historically.
+Only 129 of 145 shared task outcomes agree across the two suites. See the
+[record-by-record reconciliation](docs/reproducibility/appendix_s_drift.md).
 
 | Variable | Values | Effect |
 |---|---|---|
@@ -176,11 +178,15 @@ python scripts/analyze/reverify_corpus.py \
     --kernels <dir-of-namespace__op.py> --policy baseline \
     --out runs/baseline.json --audit-dir runs/audit --jobs 8
 
+# Clone-free timing (needed by the summary command below)
+python scripts/analyze/reverify_corpus.py \
+    --kernels <dir> --policy clone_free --out runs/clone_free.json --jobs 8
+
 # Held-out shapes/strides and a fresh input seed
 python scripts/analyze/reverify_corpus.py \
     --kernels <dir> --policy heldout --out runs/heldout.json --jobs 8
 
-# Summarise into the tables reported in the paper
+# Summarise the outputs from this suite version
 python scripts/analyze/summarize_reverify.py \
     --baseline runs/baseline.json --heldout runs/heldout.json \
     --clone-free runs/clone_free.json \
@@ -203,3 +209,20 @@ names follow `<namespace>__<operator>.py` (`aten__softmax.py`,
 ## Reproducibility Notes
 
 The paper's reported rates aggregate 110 or 210 operator outcomes. Most costly agent configurations use a single generation trajectory, whereas kernel timing uses warm-up and repeated measurement. Reproducing a complete table requires access to the corresponding model or agent APIs and can incur substantial token and wall-clock cost; the single-operator commands above validate the released task, generation, and verification pipeline at low cost.
+
+
+### Appendix S reproduction boundary
+
+The saved study reports 135/135 current-suite successes retained under held-out
+validation. Additional cases cover 34 of all 152 replayed operators, but only
+32 of the 135 accepted operators. The 101-operator tolerance audit reaches a
+maximum reduction length of 5,333, below the standalone probe's 24,599,400.
+The clone-free comparison covers 20 operators and is not a full-table guarantee.
+
+The scripts are tracked in this repository. The exact candidate corpus and
+`runs/*.json` used for the paper are local study inputs/outputs and are not
+bundled by the tracked files alone. The commands above therefore describe how
+to run the policies on a supplied corpus, not an out-of-the-box reproduction
+of the paper's exact numbers. Shipping a complete snapshot requires those
+inputs, outputs, dependencies and frozen suite identifiers. The availability
+of these materials on the anonymous website has not been verified here.

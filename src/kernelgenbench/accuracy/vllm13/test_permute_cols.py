@@ -1,13 +1,13 @@
 import kernelgenbench
 from sandbox.config import DEVICE as device
 from sandbox.verifier.test_parametrize import parametrize, label
-from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_close
+from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_close, heldout_params
 from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 import torch
 import triton
 
 @label("permute_cols")
-@parametrize("shape", [(1, 32), (71, 504), (128, 512), (1024, 4096), (5333, 8192)])
+@parametrize("shape", heldout_params([(1, 32), (71, 504), (128, 512), (1024, 4096), (5333, 8192)], [(37, 136), (257, 1024)]))
 @parametrize("perm_pattern", ["identity", "reverse", "random"])
 @parametrize("dtype", [torch.float16, torch.bfloat16])
 def test_accuracy_permute_cols(shape, perm_pattern, dtype):

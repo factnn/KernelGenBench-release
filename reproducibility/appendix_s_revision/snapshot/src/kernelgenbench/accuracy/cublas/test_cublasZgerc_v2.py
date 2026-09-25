@@ -1,0 +1,72 @@
+import kernelgenbench
+from sandbox.config import DEVICE as device
+from sandbox.verifier.test_parametrize import parametrize, label
+from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_close
+import torch
+
+@label("cublasZgerc_v2")
+@parametrize("n", [1, 32, 71, 1024, 4096, 5333])
+@parametrize("alpha", [1.0, 0.0, -0.999, 0.5, 100.001])
+@parametrize("incx", [1, 2])
+@parametrize("dtype", [torch.complex128])
+def test_accuracy_cublasZgerc_v2(n, alpha, incx, dtype):
+    m = n
+    incy = incx
+    lda = m
+
+    x_len = 1 + (m - 1) * incx
+    y_len = 1 + (n - 1) * incy
+
+    x = torch.randn(x_len, dtype=dtype, device='cuda')
+    y = torch.randn(y_len, dtype=dtype, device='cuda')
+    A = torch.randn(m, n, dtype=dtype, device='cuda')
+
+    x_ref = x.clone()
+    y_ref = y.clone()
+    A_ref = A.clone()
+
+    x_act = x.clone()
+    y_act = y.clone()
+    A_act = A.clone()
+
+    ref_out = kernelgenbench.baseline.cublasZgerc_v2(m, n, alpha, x_ref, incx, y_ref, incy, A_ref, lda)
+    act_out = kernelgenbench.triton.cublasZgerc_v2(m, n, alpha, x_act, incx, y_act, incy, A_act, lda)
+
+    assert_close(act_out, ref_out, dtype)
+
+    # Performance Test
+    from sandbox.utils.accuracy_utils import CustomBenchmarkResult
+    if n < 1024:
+        return None
+
+    x_bench = torch.randn(x_len, dtype=dtype, device='cuda')
+    y_bench = torch.randn(y_len, dtype=dtype, device='cuda')
+    A_bench = torch.randn(m, n, dtype=dtype, device='cuda')
+
+    # warmup
+    for _ in range(10):
+        _ = kernelgenbench.baseline.cublasZgerc_v2(m, n, alpha, x_bench, incx, y_bench, incy, A_bench.clone(), lda)
+        _ = kernelgenbench.triton.cublasZgerc_v2(m, n, alpha, x_bench, incx, y_bench, incy, A_bench.clone(), lda)
+    torch.cuda.synchronize()
+
+    start_event = torch.cuda.Event(enable_timing=True)
+    end_event = torch.cuda.Event(enable_timing=True)
+
+    torch.cuda.synchronize()
+    start_event.record()
+    for _ in range(100):
+        _ = kernelgenbench.baseline.cublasZgerc_v2(m, n, alpha, x_bench, incx, y_bench, incy, A_bench.clone(), lda)
+    end_event.record()
+    torch.cuda.synchronize()
+    ms_baseline = start_event.elapsed_time(end_event) / 100
+
+    torch.cuda.synchronize()
+    start_event.record()
+    for _ in range(100):
+        _ = kernelgenbench.triton.cublasZgerc_v2(m, n, alpha, x_bench, incx, y_bench, incy, A_bench.clone(), lda)
+    end_event.record()
+    torch.cuda.synchronize()
+    ms_triton = start_event.elapsed_time(end_event) / 100
+
+    speedup = ms_baseline / ms_triton
+    return CustomBenchmarkResult(ref_time=ms_baseline, res_time=ms_triton, speedup=speedup)

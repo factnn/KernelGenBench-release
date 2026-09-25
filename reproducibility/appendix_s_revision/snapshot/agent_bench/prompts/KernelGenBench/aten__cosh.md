@@ -1,0 +1,147 @@
+# Triton Kernel Implementation Task
+
+You need to implement a Triton kernel for a PyTorch operator.
+
+## Task Information
+
+- **Operator**: cosh
+- **Full Name**: aten::cosh
+- **GPU ID**: 0
+
+## Environment
+
+- All GPU commands must be prefixed with `CUDA_VISIBLE_DEVICES=0`
+- Python path: `python`
+
+## Operator Specification
+
+### Function Signatures
+
+- `cosh`: aten::cosh(Tensor self) -> Tensor
+- `cosh.out`: aten::cosh.out(Tensor self, *, Tensor(a!) out) -> Tensor(a!)
+- `cosh.int`: aten::cosh.int(int a) -> float
+- `cosh.float`: aten::cosh.float(float a) -> float
+- `cosh.complex`: aten::cosh.complex(complex a) -> complex
+- `cosh.Scalar`: aten::cosh.Scalar(Scalar a) -> Scalar
+
+### Interfaces to Implement
+
+- `cosh` (autograd: disable)
+- `cosh.out` (autograd: disable)
+- `cosh.int` (autograd: disable)
+- `cosh.float` (autograd: disable)
+- `cosh.complex` (autograd: disable)
+- `cosh.Scalar` (autograd: disable)
+
+### Input/Output Arguments
+
+```
+aten::cosh(Tensor self) -> Tensor
+```
+
+## Implementation Requirements
+
+### 1. Code Structure
+
+Your implementation must include:
+1. **Triton kernel function**: core computation logic decorated with `@triton.jit`
+2. **Python wrapper functions**: one for each ATen interface variant
+
+### 2. Key Requirements
+
+**Must handle:**
+- **Broadcasting**: support inputs with different shapes following PyTorch broadcast semantics
+- **Non-contiguous tensors**: do not assume inputs are contiguous, use correct stride calculations
+- **All overload variants**: implement every listed interface variant
+
+**Naming convention:**
+- Wrapper function names must match ATen operator names
+- Replace `.` with `_` (e.g. `add.Tensor` → `add_Tensor`)
+
+### 3. Precision Requirements
+
+- For float16/bfloat16 inputs, accumulate internally in float32
+- Use `allow_tf32=False` for matrix operations to maintain precision
+
+## Example
+
+Implementation example for the `add` operator:
+
+```python
+import torch
+import triton
+import triton.language as tl
+
+
+@triton.jit
+def add_kernel(
+    x_ptr, y_ptr, output_ptr,
+    n_elements,
+    BLOCK_SIZE: tl.constexpr,
+):
+    pid = tl.program_id(axis=0)
+    block_start = pid * BLOCK_SIZE
+    offsets = block_start + tl.arange(0, BLOCK_SIZE)
+    mask = offsets < n_elements
+
+    x = tl.load(x_ptr + offsets, mask=mask)
+    y = tl.load(y_ptr + offsets, mask=mask)
+    output = x + y
+
+    tl.store(output_ptr + offsets, output, mask=mask)
+
+
+def add_Tensor(self: torch.Tensor, other: torch.Tensor, alpha: float = 1) -> torch.Tensor:
+    """Implements aten::add.Tensor"""
+    # Handle broadcasting
+    self, other = torch.broadcast_tensors(self, other)
+    # Ensure contiguity
+    self = self.contiguous()
+    other = other.contiguous()
+
+    output = torch.empty_like(self)
+    n_elements = output.numel()
+
+    grid = lambda meta: (triton.cdiv(n_elements, meta['BLOCK_SIZE']),)
+
+    # Handle alpha
+    if alpha != 1:
+        other = other * alpha
+
+    add_kernel[grid](self, other, output, n_elements, BLOCK_SIZE=1024)
+
+    return output
+
+
+def add_Scalar(self: torch.Tensor, other: float, alpha: float = 1) -> torch.Tensor:
+    """Implements aten::add.Scalar"""
+    return add_Tensor(self, torch.full_like(self, other), alpha)
+
+
+def add_out(self: torch.Tensor, other: torch.Tensor, alpha: float = 1, *, out: torch.Tensor) -> torch.Tensor:
+    """Implements aten::add.out"""
+    result = add_Tensor(self, other, alpha)
+    out.copy_(result)
+    return out
+```
+
+## Output Requirements
+
+**Important**: Output the complete Python code directly in your reply:
+
+1. Code must be wrapped in a ```python ... ``` code block
+2. Code must be runnable as-is, without modification
+3. Do not include test code or benchmark code
+4. Do not add extra explanations, output only the code block
+5. **Do not write code to a file**, output it directly in your reply
+
+Example output format:
+```python
+import torch
+import triton
+import triton.language as tl
+
+# Your implementation...
+```
+
+

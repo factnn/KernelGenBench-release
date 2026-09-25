@@ -1,0 +1,91 @@
+
+{'ref_time': 0.010239999741315842, 'res_time': 0.009216000325977802, 'speedup': 1.1111110437411356, 'params': {'dtype': 'torch.float32', 'shape': [2, 3]}}
+{'ref_time': 0.009216000325977802, 'res_time': 0.009216000325977802, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [128, 256]}}
+{'ref_time': 0.01228800043463707, 'res_time': 0.011264000087976456, 'speedup': 1.0909091209750312, 'params': {'dtype': 'torch.float32', 'shape': [512, 512]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.011264000087976456, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [2, 3]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [128, 256]}}
+{'ref_time': 0.016383999958634377, 'res_time': 0.016383999958634377, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [512, 512]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.011264000087976456, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [2, 3]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [128, 256]}}
+{'ref_time': 0.016383999958634377, 'res_time': 0.016383999958634377, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [512, 512]}}
+{'ref_time': 0.008191999979317188, 'res_time': 0.008191999979317188, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [2, 3]}}
+{'ref_time': 0.009216000325977802, 'res_time': 0.009216000325977802, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [128, 256]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.01228800043463707, 'speedup': 0.9166666414029259, 'params': {'dtype': 'torch.float32', 'shape': [512, 512]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.011264000087976456, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [2, 3]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [128, 256]}}
+{'ref_time': 0.016383999958634377, 'res_time': 0.016383999958634377, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [512, 512]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.011264000087976456, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [2, 3]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [128, 256]}}
+{'ref_time': 0.016383999958634377, 'res_time': 0.016383999958634377, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [512, 512]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.1, 'dtype': 'torch.float32', 'shape': [2, 3]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.1, 'dtype': 'torch.float32', 'shape': [128, 256]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.011264000087976456, 'speedup': 0.9090908790249688, 'params': {'p': 0.1, 'dtype': 'torch.float32', 'shape': [512, 512]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.1, 'dtype': 'torch.float16', 'shape': [2, 3]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.008191999979317188, 'speedup': 0.8750000142108547, 'params': {'p': 0.1, 'dtype': 'torch.float16', 'shape': [128, 256]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.011264000087976456, 'speedup': 1.0, 'params': {'p': 0.1, 'dtype': 'torch.float16', 'shape': [512, 512]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.1, 'dtype': 'torch.bfloat16', 'shape': [2, 3]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.1, 'dtype': 'torch.bfloat16', 'shape': [128, 256]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.011264000087976456, 'speedup': 1.0, 'params': {'p': 0.1, 'dtype': 'torch.bfloat16', 'shape': [512, 512]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.5, 'dtype': 'torch.float32', 'shape': [2, 3]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.008191999979317188, 'speedup': 0.8750000142108547, 'params': {'p': 0.5, 'dtype': 'torch.float32', 'shape': [128, 256]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.010239999741315842, 'speedup': 1.100000036379789, 'params': {'p': 0.5, 'dtype': 'torch.float32', 'shape': [512, 512]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.5, 'dtype': 'torch.float16', 'shape': [2, 3]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.5, 'dtype': 'torch.float16', 'shape': [128, 256]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.011264000087976456, 'speedup': 1.0, 'params': {'p': 0.5, 'dtype': 'torch.float16', 'shape': [512, 512]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.5, 'dtype': 'torch.bfloat16', 'shape': [2, 3]}}
+{'ref_time': 0.008191999979317188, 'res_time': 0.008191999979317188, 'speedup': 1.0, 'params': {'p': 0.5, 'dtype': 'torch.bfloat16', 'shape': [128, 256]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.011264000087976456, 'speedup': 1.0, 'params': {'p': 0.5, 'dtype': 'torch.bfloat16', 'shape': [512, 512]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.9, 'dtype': 'torch.float32', 'shape': [2, 3]}}
+{'ref_time': 0.008191999979317188, 'res_time': 0.008191999979317188, 'speedup': 1.0, 'params': {'p': 0.9, 'dtype': 'torch.float32', 'shape': [128, 256]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.011264000087976456, 'speedup': 0.9090908790249688, 'params': {'p': 0.9, 'dtype': 'torch.float32', 'shape': [512, 512]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.9, 'dtype': 'torch.float16', 'shape': [2, 3]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.9, 'dtype': 'torch.float16', 'shape': [128, 256]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.011264000087976456, 'speedup': 1.0, 'params': {'p': 0.9, 'dtype': 'torch.float16', 'shape': [512, 512]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'p': 0.9, 'dtype': 'torch.bfloat16', 'shape': [2, 3]}}
+{'ref_time': 0.008191999979317188, 'res_time': 0.008191999979317188, 'speedup': 1.0, 'params': {'p': 0.9, 'dtype': 'torch.bfloat16', 'shape': [128, 256]}}
+{'ref_time': 0.011264000087976456, 'res_time': 0.011264000087976456, 'speedup': 1.0, 'params': {'p': 0.9, 'dtype': 'torch.bfloat16', 'shape': [512, 512]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [2, 3]}}
+{'ref_time': 0.01228800043463707, 'res_time': 0.01228800043463707, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [128, 256]}}
+{'ref_time': 0.01740800030529499, 'res_time': 0.01740800030529499, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [512, 512]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [2, 3]}}
+{'ref_time': 0.01228800043463707, 'res_time': 0.01228800043463707, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [128, 256]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [512, 512]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [2, 3]}}
+{'ref_time': 0.01228800043463707, 'res_time': 0.01228800043463707, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [128, 256]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [512, 512]}}
+{'ref_time': 0.013311999849975109, 'res_time': 0.013311999849975109, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [2, 3]}}
+{'ref_time': 0.015359999611973763, 'res_time': 0.015359999611973763, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [128, 256]}}
+{'ref_time': 0.021503999829292297, 'res_time': 0.021503999829292297, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [512, 512]}}
+{'ref_time': 0.013311999849975109, 'res_time': 0.013311999849975109, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [2, 3]}}
+{'ref_time': 0.015359999611973763, 'res_time': 0.016383999958634377, 'speedup': 0.9374999786837179, 'params': {'dtype': 'torch.float16', 'shape': [128, 256]}}
+{'ref_time': 0.01740800030529499, 'res_time': 0.01740800030529499, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [512, 512]}}
+{'ref_time': 0.013311999849975109, 'res_time': 0.013311999849975109, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [2, 3]}}
+{'ref_time': 0.015359999611973763, 'res_time': 0.016383999958634377, 'speedup': 0.9374999786837179, 'params': {'dtype': 'torch.bfloat16', 'shape': [128, 256]}}
+{'ref_time': 0.01740800030529499, 'res_time': 0.018432000651955605, 'speedup': 0.9444444276019506, 'params': {'dtype': 'torch.bfloat16', 'shape': [512, 512]}}
+{'ref_time': 0.009216000325977802, 'res_time': 0.009216000325977802, 'speedup': 1.0, 'params': {'p': None, 'dtype': 'torch.float32', 'shape': [2, 3]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': None, 'dtype': 'torch.float32', 'shape': [128, 256]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.015359999611973763, 'speedup': 0.9333333697131223, 'params': {'p': None, 'dtype': 'torch.float32', 'shape': [512, 512]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': None, 'dtype': 'torch.float16', 'shape': [2, 3]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': None, 'dtype': 'torch.float16', 'shape': [128, 256]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'p': None, 'dtype': 'torch.float16', 'shape': [512, 512]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': None, 'dtype': 'torch.bfloat16', 'shape': [2, 3]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': None, 'dtype': 'torch.bfloat16', 'shape': [128, 256]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'p': None, 'dtype': 'torch.bfloat16', 'shape': [512, 512]}}
+{'ref_time': 0.009216000325977802, 'res_time': 0.009216000325977802, 'speedup': 1.0, 'params': {'p': 0.3, 'dtype': 'torch.float32', 'shape': [2, 3]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': 0.3, 'dtype': 'torch.float32', 'shape': [128, 256]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.015359999611973763, 'speedup': 0.9333333697131223, 'params': {'p': 0.3, 'dtype': 'torch.float32', 'shape': [512, 512]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': 0.3, 'dtype': 'torch.float16', 'shape': [2, 3]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': 0.3, 'dtype': 'torch.float16', 'shape': [128, 256]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'p': 0.3, 'dtype': 'torch.float16', 'shape': [512, 512]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': 0.3, 'dtype': 'torch.bfloat16', 'shape': [2, 3]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': 0.3, 'dtype': 'torch.bfloat16', 'shape': [128, 256]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'p': 0.3, 'dtype': 'torch.bfloat16', 'shape': [512, 512]}}
+{'ref_time': 0.009216000325977802, 'res_time': 0.009216000325977802, 'speedup': 1.0, 'params': {'p': 0.8, 'dtype': 'torch.float32', 'shape': [2, 3]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': 0.8, 'dtype': 'torch.float32', 'shape': [128, 256]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.015359999611973763, 'speedup': 0.9333333697131223, 'params': {'p': 0.8, 'dtype': 'torch.float32', 'shape': [512, 512]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': 0.8, 'dtype': 'torch.float16', 'shape': [2, 3]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': 0.8, 'dtype': 'torch.float16', 'shape': [128, 256]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'p': 0.8, 'dtype': 'torch.float16', 'shape': [512, 512]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': 0.8, 'dtype': 'torch.bfloat16', 'shape': [2, 3]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'p': 0.8, 'dtype': 'torch.bfloat16', 'shape': [128, 256]}}
+{'ref_time': 0.014336000196635723, 'res_time': 0.014336000196635723, 'speedup': 1.0, 'params': {'p': 0.8, 'dtype': 'torch.bfloat16', 'shape': [512, 512]}}

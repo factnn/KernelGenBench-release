@@ -1,0 +1,748 @@
+{
+  "original_results_sha256": "fb9d9bb0cdf089e6a85db6224edde102a7a6d34aa2efa3a6bb9fbfc39bc34d92",
+  "baseline_results_sha256": "aad3d53c9648121afb0556959585e64386f83e747c520fb25b1a678729930c39",
+  "common_operators": 145,
+  "agreement": 129,
+  "failed_to_passed": 11,
+  "passed_to_failed": 5,
+  "differences": [
+    {
+      "operator": "aten::affine_grid_generator",
+      "original_passed": false,
+      "current_passed": true,
+      "original_cases": "5/36",
+      "current_cases": "72/72",
+      "evidence": "Historical traceback reaches numerical comparison; case count changes from 36 to 72. Cause unresolved."
+    },
+    {
+      "operator": "aten::bernoulli",
+      "original_passed": false,
+      "current_passed": true,
+      "original_cases": "0/9",
+      "current_cases": "90/90",
+      "evidence": "Historical traceback reaches numerical comparison; case count changes from 9 to 90. Cause unresolved."
+    },
+    {
+      "operator": "aten::binary_cross_entropy_with_logits",
+      "original_passed": false,
+      "current_passed": true,
+      "original_cases": "0/0",
+      "current_cases": "216/216",
+      "evidence": "Historical traceback is in source checking before tests; message is truncated. Cause unresolved."
+    },
+    {
+      "operator": "aten::bmm",
+      "original_passed": true,
+      "current_passed": false,
+      "original_cases": "9/9",
+      "current_cases": "0/9",
+      "evidence": "Current test raises NameError: shape is undefined. The test body also calls cat rather than bmm."
+    },
+    {
+      "operator": "aten::div_",
+      "original_passed": true,
+      "current_passed": false,
+      "original_cases": "96/96",
+      "current_cases": "90/96",
+      "evidence": "Current truncation test raises NameError: inp1 is undefined."
+    },
+    {
+      "operator": "aten::index",
+      "original_passed": true,
+      "current_passed": false,
+      "original_cases": "30/30",
+      "current_cases": "28/29",
+      "evidence": "Current empty-indices reference call raises an internal PyTorch assertion. Root cause unresolved."
+    },
+    {
+      "operator": "aten::index_put_",
+      "original_passed": true,
+      "current_passed": false,
+      "original_cases": "44/44",
+      "current_cases": "33/43",
+      "evidence": "Current accumulation test raises UnboundLocalError for inp before assignment."
+    },
+    {
+      "operator": "aten::pow",
+      "original_passed": true,
+      "current_passed": false,
+      "original_cases": "162/162",
+      "current_cases": "90/162",
+      "evidence": "Current test accesses imag on a non-complex tensor and raises RuntimeError."
+    },
+    {
+      "operator": "aten::sort",
+      "original_passed": false,
+      "current_passed": true,
+      "original_cases": "0/0",
+      "current_cases": "320/320",
+      "evidence": "Historical run timed out after 600 seconds; current replay passes. Cause unresolved."
+    },
+    {
+      "operator": "cublas::cublasCgemvStridedBatched",
+      "original_passed": false,
+      "current_passed": true,
+      "original_cases": "0/0",
+      "current_cases": "432/432",
+      "evidence": "Historical process exited with code -6 before test results; current replay passes. Exit code alone does not establish cause."
+    },
+    {
+      "operator": "cublas::cublasCgemv_v2",
+      "original_passed": false,
+      "current_passed": true,
+      "original_cases": "0/0",
+      "current_cases": "1152/1152",
+      "evidence": "Historical process exited with code -6 before test results; current replay passes. Exit code alone does not establish cause."
+    },
+    {
+      "operator": "cublas::cublasDgemmStridedBatched",
+      "original_passed": false,
+      "current_passed": true,
+      "original_cases": "0/0",
+      "current_cases": "864/864",
+      "evidence": "Historical process exited with code -6 before test results; current replay passes. Exit code alone does not establish cause."
+    },
+    {
+      "operator": "cublas::cublasDgemvStridedBatched",
+      "original_passed": false,
+      "current_passed": true,
+      "original_cases": "0/0",
+      "current_cases": "432/432",
+      "evidence": "Historical process exited with code -6 before test results; current replay passes. Exit code alone does not establish cause."
+    },
+    {
+      "operator": "cublas::cublasSaxpy_v2",
+      "original_passed": false,
+      "current_passed": true,
+      "original_cases": "0/0",
+      "current_cases": "648/648",
+      "evidence": "Historical process exited with code -6 before test results; current replay passes. Exit code alone does not establish cause."
+    },
+    {
+      "operator": "cublas::cublasSscal_v2",
+      "original_passed": false,
+      "current_passed": true,
+      "original_cases": "0/0",
+      "current_cases": "216/216",
+      "evidence": "Historical process exited with code -6 before test results; current replay passes. Exit code alone does not establish cause."
+    },
+    {
+      "operator": "cublas::cublasZgemmStridedBatched",
+      "original_passed": false,
+      "current_passed": true,
+      "original_cases": "0/0",
+      "current_cases": "768/768",
+      "evidence": "Historical process exited with code -6 before test results; current replay passes. Exit code alone does not establish cause."
+    }
+  ],
+  "candidate_hashes": [
+    {
+      "operator": "aten::_local_scalar_dense",
+      "sha256": "67e54eb883a24a080eac7d72bf8fd024facd2a616cc250365f4015ea945351c7"
+    },
+    {
+      "operator": "aten::_softmax",
+      "sha256": "9a7bbc09ac1d993f780eaf77913aeba79f9e1a0ca7ab4950b93009218b42d32a"
+    },
+    {
+      "operator": "aten::_to_copy",
+      "sha256": "949322d124bcefa3361b35c4eec1c880e7ca1dbfa3eb41308fe46649a15fa9a8"
+    },
+    {
+      "operator": "aten::acosh",
+      "sha256": "ccf7627f1b221c609772b90ed6a0928a4c6e3429241a18d0a6a0be931521647c"
+    },
+    {
+      "operator": "aten::affine_grid_generator",
+      "sha256": "0b54a1e5f5b0f70833beee0da4dc849286e6a83aa55b6c269177516abd6317b4"
+    },
+    {
+      "operator": "aten::argmax",
+      "sha256": "0c99f7016c485b10e281fe36ecb345c4a033f29374758493d90802c049d4c4cf"
+    },
+    {
+      "operator": "aten::as_strided",
+      "sha256": "571f333f51b737c168029255ef3e0406c1886240b42da84dc1c9762e53e962fc"
+    },
+    {
+      "operator": "aten::asin",
+      "sha256": "19dcf8477e0f8d4979eff4659bc2c1cba2b4d6ec10ef0a9b9bc025751d156091"
+    },
+    {
+      "operator": "aten::bernoulli",
+      "sha256": "fa19c9f11bdaae445c1b3d80dfa5faa5bfa8afeedc861135d5cd0e2c84f62ec4"
+    },
+    {
+      "operator": "aten::binary_cross_entropy_with_logits",
+      "sha256": "6d31ab4cd26594bce4280a43a6a10f843a577a3103970c4d446f37659e93dc03"
+    },
+    {
+      "operator": "aten::bitwise_not",
+      "sha256": "19dc0d3eb0d0ef9962275bf51fc7d09a9c8714fc755c94e1daaaed76d0c49e65"
+    },
+    {
+      "operator": "aten::bmm",
+      "sha256": "03cea26805e39ab7453e6b0094342cbca4a50d1880fd256a7cba7ccff2d8cc98"
+    },
+    {
+      "operator": "aten::cat",
+      "sha256": "dcfebc04e2a57f141d17c01fd5f55cd1b717fbc5adbb540dbaf62d4af6f462eb"
+    },
+    {
+      "operator": "aten::clone",
+      "sha256": "59580555197e973f60ce89f8bf0e54ea5eb9091a4367f62a0797adbe5b0e98a9"
+    },
+    {
+      "operator": "aten::contiguous",
+      "sha256": "5eab19d17eb3a4f1fcd4e7aca1646c1efd52cbcbe2b6f615d66790e35d0311a1"
+    },
+    {
+      "operator": "aten::copy_",
+      "sha256": "eb01dc6caf226177015cbd619b22df0ccc0e9fb33fddbe52cd721c5b51270cc8"
+    },
+    {
+      "operator": "aten::cos",
+      "sha256": "fdde12f56fb43cfba0e466cf607c4f7c8a8cedcc2e9216ef5c6413417694c656"
+    },
+    {
+      "operator": "aten::cosh",
+      "sha256": "129d2c7895c4c0ff2a076838fbfe9c0076440840598873d15fafc1da0e699df1"
+    },
+    {
+      "operator": "aten::diff",
+      "sha256": "58dea21c10cb615bf994af7a8b129bf4122eb6477086c1e4683ad18567679570"
+    },
+    {
+      "operator": "aten::div_",
+      "sha256": "ee7e2b98e4e63f144b1b6f7463cb7b8ff6f46c4126554a6f9dfc4267e5912fce"
+    },
+    {
+      "operator": "aten::empty_strided",
+      "sha256": "66f1d1ef8a94be7bbe1860c5ff29c9162bd71aff902df56c27841153933931e1"
+    },
+    {
+      "operator": "aten::eq",
+      "sha256": "4b166421174d38c23c2c9b49698436aafbd2ef0e9d250d19f2e420f1ea2e9f5e"
+    },
+    {
+      "operator": "aten::erfc",
+      "sha256": "5c22fd112a16f634bc9f91e301e301d28772825d2795df6fe0c96caf6c7a9ce2"
+    },
+    {
+      "operator": "aten::expand",
+      "sha256": "4eb133fc27d85fc1068fb867d4b3191ce0498d12b3f02931f854a2ef3bdbf2bf"
+    },
+    {
+      "operator": "aten::expand_as",
+      "sha256": "f3980c5bc5fa59d3988b33302c99bbe0f4039a8bf6d7d24749a94edacd9952c1"
+    },
+    {
+      "operator": "aten::exponential_",
+      "sha256": "4a8dfc25b8133f19852855ffdaddb913d7b0ecdfa0c3e6d9fed4cfd0b77e97f9"
+    },
+    {
+      "operator": "aten::fill_",
+      "sha256": "0c6c4fb17ad43e3cff018e01007f12a8b270c14e29fdb926c4eb71b86cc8dca1"
+    },
+    {
+      "operator": "aten::floor",
+      "sha256": "ca4e3cae594a15e6a9bfb7088e3f4f7de2fb1304dc979b6b1a37573bae1adeea"
+    },
+    {
+      "operator": "aten::floor_divide",
+      "sha256": "9f34aebf1c8d29f026e3683acd04206ef09fd9316a5a25a6d82ff5f2076111b1"
+    },
+    {
+      "operator": "aten::fmax",
+      "sha256": "ae946df3317df3267c680bf04344dcdfe7741f79832de879db7dca5e6a6ffdb0"
+    },
+    {
+      "operator": "aten::full",
+      "sha256": "d81c9dd244cbc337233c564c3a66f5084d9884fe3e985d272696926d1bd52d1b"
+    },
+    {
+      "operator": "aten::gather",
+      "sha256": "97d8bc9675179993768f314d894a6457f0f73af04e7c6e5ffb43bb5011e147cd"
+    },
+    {
+      "operator": "aten::gt",
+      "sha256": "a884ab47ed8bcdcd496dc3cfba73eaf66e722720c36d2f53db66a509bb3aad7e"
+    },
+    {
+      "operator": "aten::hardsigmoid",
+      "sha256": "d230a428bbb7b736040aee7d608b993784dc6aa693eec8931acc5fbc31733dd6"
+    },
+    {
+      "operator": "aten::heaviside",
+      "sha256": "82543c3cc2940def8bdc4a21a771b9acb3a4dd8fb70db7790ca9980ac23c9d4c"
+    },
+    {
+      "operator": "aten::huber_loss",
+      "sha256": "39aa2ca9d00ec86b9a554ecdbafe23ad34ea39f0e35e02ef042cabb5df3964df"
+    },
+    {
+      "operator": "aten::i0",
+      "sha256": "e6181a65efcb68f1dfd41eaac57e14c450a7c38f2d09f7fb76b07cf2b9aecb89"
+    },
+    {
+      "operator": "aten::im2col",
+      "sha256": "26ddd33fb7ece6ffb7b4d962551f78bc97ed97e1a7082f6e10f02f805136a8d8"
+    },
+    {
+      "operator": "aten::index",
+      "sha256": "dc6c45d5eae7076647de7caf5ca35df10334896f6f4ce0b458780ab55a3cc8ad"
+    },
+    {
+      "operator": "aten::index_put_",
+      "sha256": "41ef115d19ffb27511a5dbe653cfc4b87995f525f75e420ccb3949a9f2a1e94e"
+    },
+    {
+      "operator": "aten::index_select",
+      "sha256": "59e036b42f29f096800fbb829ddb60c6148d76715fddd5b9dbd0964292d08831"
+    },
+    {
+      "operator": "aten::item",
+      "sha256": "5f73486d5a02d757fa84e0adaa89511db417a25d59eee6251d218c7a94723d94"
+    },
+    {
+      "operator": "aten::le",
+      "sha256": "56d3779bc68200898b1051e8c057a7aa0f38516171e28db4f733d2464760e340"
+    },
+    {
+      "operator": "aten::log10",
+      "sha256": "6efb087e0d365e27789b87e7848148f29bf889be4e4d199d33394c13fefa2c10"
+    },
+    {
+      "operator": "aten::log_sigmoid_backward",
+      "sha256": "df4f705283c5de5e856fd870317f8623c7f73ad2d771c73f5643c299ecdea9bb"
+    },
+    {
+      "operator": "aten::logaddexp2",
+      "sha256": "4bb7b610d92bd4efd2e8d2e6c4768eb129c3500a8e049b1ae6396375a6a274f5"
+    },
+    {
+      "operator": "aten::logit",
+      "sha256": "79086bfc511ad5fc703f5be3f2be076b13667c877a6df1b208a863698bda5551"
+    },
+    {
+      "operator": "aten::margin_ranking_loss",
+      "sha256": "1c356633df1ee62ceecbdeb0683349b09ff263fcfe8cb2a516da16c73d71c0d9"
+    },
+    {
+      "operator": "aten::masked_fill_",
+      "sha256": "83903a2d2efcce4625b3369e9b5133f9cf31e70db0c2173d56b5a3d6af275595"
+    },
+    {
+      "operator": "aten::mean",
+      "sha256": "4435b8f033c2ca937b9771c8cb8778860d12b49f21d12eecaf3090e1d81f9070"
+    },
+    {
+      "operator": "aten::mish",
+      "sha256": "4f01e4b51e2df79955dedaa07b685b9acc0e9568b1d0e91b57c36b05d4a20d7d"
+    },
+    {
+      "operator": "aten::mish_backward",
+      "sha256": "3a1a9595938770edbfa2dc5d2a06caba4b9d9cc22e53ddde6ef45e8114de09f4"
+    },
+    {
+      "operator": "aten::mul",
+      "sha256": "327d514dad153fbf2d312329d54166a68507fd39538773f5ca4d432724097f2b"
+    },
+    {
+      "operator": "aten::narrow",
+      "sha256": "f8a6a597991f8b3185a8df6791a5d7a8de421b66bde73e511a712e516183cbed"
+    },
+    {
+      "operator": "aten::neg",
+      "sha256": "ff43b3f2b7e5e972a41c6362551eec3a16fa4e5abf3a482e47d4dd582379dc5b"
+    },
+    {
+      "operator": "aten::new_empty_strided",
+      "sha256": "0d416311b33a9d482d31525b4b9ac0e5439630d84aabbea0831957b0db49c612"
+    },
+    {
+      "operator": "aten::new_ones",
+      "sha256": "2f1d146fd9e578058daba51caf0a42703e5ee0cdf83c2da06215ea11bdcbea33"
+    },
+    {
+      "operator": "aten::ones_like",
+      "sha256": "a70ffacc6845b846587ebd56d51300c6553839017c300e6ce466fabd97c2289a"
+    },
+    {
+      "operator": "aten::pairwise_distance",
+      "sha256": "d517e5e27318cfc2fe7efa68dd2653b2729d5001faeffa28293a1882487ad909"
+    },
+    {
+      "operator": "aten::polygamma",
+      "sha256": "f70112575fc6454a393e0774f5b22eff105b576425eb001e5db733182cdccdcb"
+    },
+    {
+      "operator": "aten::pow",
+      "sha256": "a2e06eefe788455f3dafb139cb136a880f1d94590faaba3b5a722966c0ba1205"
+    },
+    {
+      "operator": "aten::prelu",
+      "sha256": "195cef0f89465e6174e8548784eed898745f6d7e4e3cb10bec4129f91b6f4e4d"
+    },
+    {
+      "operator": "aten::reflection_pad1d_backward",
+      "sha256": "75d491732866673bfdfab45aa54f5acf74b96e48d7c0f944666a42b60a9d33d9"
+    },
+    {
+      "operator": "aten::reshape",
+      "sha256": "7f35eec3813df88e771a577b6861d725a8111c3227b864db10bcb6db3ca519c2"
+    },
+    {
+      "operator": "aten::resolve_conj",
+      "sha256": "159892a9c05dae440486fbb6b07cf9972e227893964af652e3309120fae08042"
+    },
+    {
+      "operator": "aten::resolve_neg",
+      "sha256": "e207a3c588babfdf80df753d9f9c37865854d64047832243a7a32e65ac1f8aaf"
+    },
+    {
+      "operator": "aten::rot90",
+      "sha256": "666308bf33ea6b3a29b2d2d404ffaf95531b9a3a6d9333e45b0a311c573b3758"
+    },
+    {
+      "operator": "aten::rrelu_with_noise",
+      "sha256": "491d03eb943b0e067eb49464dcd3bdaf2bfb9465a27a954b4b0a0abf593fbfc7"
+    },
+    {
+      "operator": "aten::rrelu_with_noise_backward",
+      "sha256": "87b22031cdf1c0d520940fa78d0b99eb5c068f0272354c3af0a49130b29ede11"
+    },
+    {
+      "operator": "aten::rsqrt",
+      "sha256": "bf2eab5cbe3cd01b7d33a98061b1174ba32a3f436c4a2e3b41f0dbe6831c89c8"
+    },
+    {
+      "operator": "aten::rsub",
+      "sha256": "c1600e0ab4a51feaa32ec15a0d2842f9d4d4b517e9cb467c7335a5aa4e2fd851"
+    },
+    {
+      "operator": "aten::scalar_tensor",
+      "sha256": "a9505a57bde1296654d67613a6773b922eef0c48b0bd05961cba6562b6fd0991"
+    },
+    {
+      "operator": "aten::select",
+      "sha256": "36efd46386f653b58c91369e2b4b2909e695779908be9f69d5e8d0af4649d562"
+    },
+    {
+      "operator": "aten::select_backward",
+      "sha256": "e5cdf6933c3de2b53ed0c97302a868724370f246153ad4f926c1ecc6456fc1b6"
+    },
+    {
+      "operator": "aten::sgn",
+      "sha256": "cbf5dea7946102a14f3e09e406c5501f4cf75271ddc4d619fdf9867c0bbdbeeb"
+    },
+    {
+      "operator": "aten::silu",
+      "sha256": "7dcb7aa6a91c698a57eef4639a89a1b910f10e649bb80d93e7f8e7c10f541d99"
+    },
+    {
+      "operator": "aten::sin",
+      "sha256": "2bb6816a800552b934aaca3060c76b22dd3a70bfa09174c8f9a4290391f927a3"
+    },
+    {
+      "operator": "aten::smooth_l1_loss_backward",
+      "sha256": "42740be77496335fbd1838f33d403188767361c1bff2fe71dfc2570ecf601357"
+    },
+    {
+      "operator": "aten::soft_margin_loss",
+      "sha256": "a6a8a602230940a98d903e7d2ebc5598ed619056470ec10029e720a0d8faa165"
+    },
+    {
+      "operator": "aten::softmax",
+      "sha256": "c2b758e2bca4574770609be20ed28eac2d8c09264c7a8b22d204d34b9564a324"
+    },
+    {
+      "operator": "aten::softplus_backward",
+      "sha256": "5b8a9c0b140a0178d6f8a2056904174d9af875b39df625175341d101cdcc49be"
+    },
+    {
+      "operator": "aten::sort",
+      "sha256": "895e7f804b81142922c6ad0896fd270d054d37f2708314cd128dd0eaee882d34"
+    },
+    {
+      "operator": "aten::special_entr",
+      "sha256": "9fc9ffd3c2d8a01c40ec2bd82bcfeb934c55522f682e3a37ee43d53ca5c6f8f2"
+    },
+    {
+      "operator": "aten::square",
+      "sha256": "03fd539d7d820a68f7abcfa58967d1a1ac389dc83e96b6a14929e29a7f1ebfce"
+    },
+    {
+      "operator": "aten::stack",
+      "sha256": "0983004c74a41609db656df4f1f662b284fbba90d5b1d2bae95799d4aaa8a07a"
+    },
+    {
+      "operator": "aten::t",
+      "sha256": "7baf4d1f0c8cab39712cd368d7fb92a4e4467b0dfe61be7f72957910867f3c15"
+    },
+    {
+      "operator": "aten::to",
+      "sha256": "604552c91d9df08956a76fcb6332bf78c1dbe31dd71a11fe600a1c62ab2596bb"
+    },
+    {
+      "operator": "aten::unsafe_split",
+      "sha256": "65b79b501580766b447a3233c868c7f542ef8a4941958368f0f7a39e27fc9f7c"
+    },
+    {
+      "operator": "aten::unsqueeze",
+      "sha256": "41d1f40edc40b88b88033d9c54233ba393efbf2d1ea424ff56958c8ea5d2b491"
+    },
+    {
+      "operator": "aten::upsample_nearest2d_backward",
+      "sha256": "106f95b9dbe43dda91a9b9b98111a1b41b2287e6d2fef935be6769ac9ca2def1"
+    },
+    {
+      "operator": "aten::zero_",
+      "sha256": "fa37895d45b7388a7bbd0ee0c65a59db16d9788b1a622564f506c7af94cda240"
+    },
+    {
+      "operator": "aten::zeros",
+      "sha256": "825070fb02876372ef1e90713953b8b9b6a00d4263438189a83032f8057e0096"
+    },
+    {
+      "operator": "aten::zeros_like",
+      "sha256": "2b20923b2029439a7873b65f7d2a40db84921fca722f10be018ab75b8aff3682"
+    },
+    {
+      "operator": "cublas::cublasCcopy_v2",
+      "sha256": "36599bf3212e20014b76ea22df516d264ca366167b5e8b65919f98b0de2eb9ff"
+    },
+    {
+      "operator": "cublas::cublasCdotu_v2",
+      "sha256": "18dd69e50e92e54cbb97ffd6c449a841ecc1d83037fe16f4d8a4232d236d6019"
+    },
+    {
+      "operator": "cublas::cublasCgemvBatched_64",
+      "sha256": "5235d70a22a8c8d1edc56679d5d0a88741a40f8a68ed967bb20959c91e15b688"
+    },
+    {
+      "operator": "cublas::cublasCgemvStridedBatched",
+      "sha256": "0e19a9d3a4208c90e1c708a375f82b6ee9374b7f8f138fce7cd681f356014bec"
+    },
+    {
+      "operator": "cublas::cublasCgemv_v2",
+      "sha256": "d6d742c99c95822b0a5227683e4756b1f726ec5401a565f79a2f27a3f0ce1001"
+    },
+    {
+      "operator": "cublas::cublasCgeru_v2",
+      "sha256": "77ab1a77dc3ace08e059ea4e401def01c5e802ed5588fc091217261f98fc97b9"
+    },
+    {
+      "operator": "cublas::cublasCsymv_v2",
+      "sha256": "064bdb698ac4c17a2fd622191890a7d395b748961907d842fefeca4a50d8c8aa"
+    },
+    {
+      "operator": "cublas::cublasDasum_v2",
+      "sha256": "ed36a2146289da6f3436e2a906abccd92e039ba74b6cbd5a59441a41965ba332"
+    },
+    {
+      "operator": "cublas::cublasDaxpy_v2",
+      "sha256": "870d56af91d548f0507d8bb8de34c9e94c17e870ed463bcacf89019be5e85c2d"
+    },
+    {
+      "operator": "cublas::cublasDcopy_v2",
+      "sha256": "a65f4ab65a63d23e15ed856bcbcc8a2d130114d2739bb54276266115532db330"
+    },
+    {
+      "operator": "cublas::cublasDgemmBatched",
+      "sha256": "909b4f836339e830d9167dfcae137f374f85cd9e2d0bf195f0ba1bb8b735ba31"
+    },
+    {
+      "operator": "cublas::cublasDgemmStridedBatched",
+      "sha256": "804485c17d067ffefafe55669e76c4f989896dcd4a61619fc0cc12b16478efb0"
+    },
+    {
+      "operator": "cublas::cublasDgemvBatched",
+      "sha256": "dc3daccdee3d330d8763020d5de48ff6694453aef29a39d8613618d47d27c8da"
+    },
+    {
+      "operator": "cublas::cublasDgemvStridedBatched",
+      "sha256": "90e2df91f95433ff51afe70da26bcde1aedae541c27bbab3289560af20cb6f8c"
+    },
+    {
+      "operator": "cublas::cublasDsbmv_v2",
+      "sha256": "18886a33a91a7d1f804344f87486f71715fb3d3a44e2927b63e0ecc2a004c379"
+    },
+    {
+      "operator": "cublas::cublasDtrsmBatched",
+      "sha256": "bd1f32b59dd8604d8baff9a3f535daecb6b10cf1c2142c4144bd50ba49c44a82"
+    },
+    {
+      "operator": "cublas::cublasSaxpy_v2",
+      "sha256": "0703c734f204e6ab2ae135b947b0f7715c5115bb18d444296c79411e227beadf"
+    },
+    {
+      "operator": "cublas::cublasSdgmm",
+      "sha256": "165927ab206ccbb268dde4bbc5945993aa332fc6c13cba8e9444f61ee8c2a5d5"
+    },
+    {
+      "operator": "cublas::cublasSdot_v2",
+      "sha256": "d37d10a44a29f3990f5f11e309f8278b72e215719898e6ca7eb3fe63277ee8eb"
+    },
+    {
+      "operator": "cublas::cublasSgeam",
+      "sha256": "8019c85363b526a181240fb9d834c962f42e89e846528ae212590398ec93f0f9"
+    },
+    {
+      "operator": "cublas::cublasSgemmEx",
+      "sha256": "c8aab6fc0f22790d296660f4b53b147934ef4d058861ba59bbb8c0c6ddcc497e"
+    },
+    {
+      "operator": "cublas::cublasSgemm_v2",
+      "sha256": "3efb3d14220da5b771622894f567f69ffc2ea44d602337c2723c245aaecb3a60"
+    },
+    {
+      "operator": "cublas::cublasSgemvBatched",
+      "sha256": "14caacc4add185dd6c746032bb5dba500a9e9868364247e39f736492a07e9f0a"
+    },
+    {
+      "operator": "cublas::cublasSger_v2",
+      "sha256": "64722d75102e029b0678dbdc1a1556ed820fe88764fe80b6c1318e01606ff369"
+    },
+    {
+      "operator": "cublas::cublasSscal_v2",
+      "sha256": "f7e33b0e05e38d2b19601cf4bb4f3dccd688f47b0d64ac34a42bb7e261729801"
+    },
+    {
+      "operator": "cublas::cublasStbmv_v2",
+      "sha256": "6ace8805d367e3ff572f716afa167b1c952e95abda5db30e363b93c0de47eba5"
+    },
+    {
+      "operator": "cublas::cublasStrsv_v2",
+      "sha256": "6767ce5dcf860eea0a6cf6756fbdf304166224da56d9df33a92a363dda268300"
+    },
+    {
+      "operator": "cublas::cublasZdotc_v2",
+      "sha256": "042025b05acdd01d5cff921295d67cfbe6ba5a87e8c05f5515c3dd5ea1aa995f"
+    },
+    {
+      "operator": "cublas::cublasZgemmBatched",
+      "sha256": "a36cdddcbe3d4b665c51cf329306e92b8c37237ae3a281e9c127fc9d7453e2c8"
+    },
+    {
+      "operator": "cublas::cublasZgemmStridedBatched",
+      "sha256": "0593902c98bf2b0560a046b8da64b3a209252f82fe44654402cad06e72be4446"
+    },
+    {
+      "operator": "cublas::cublasZswap_v2",
+      "sha256": "798764c5276e05be6160b5f9c43dfdad8ae1060cea433cb836c49afa628e78b5"
+    },
+    {
+      "operator": "cublas::cublasZtrsmBatched",
+      "sha256": "f6fdee0bae971d7e54c6a99bc99fa2b49ee2cb1bc32d622e0409ffe0723d8d03"
+    },
+    {
+      "operator": "vllm13::apply_repetition_penalties_cuda",
+      "sha256": "245a09ba0971982ee79629496e3c8c2ff515382720d3316d7a31b53e66bea133"
+    },
+    {
+      "operator": "vllm13::concat_and_cache_mla",
+      "sha256": "1f34f964c0503421848a24e271d92ee34031df4b632bfb1a37f1f0607953ca38"
+    },
+    {
+      "operator": "vllm13::copy_blocks",
+      "sha256": "4ae5944d2f4b9d4c07b7ef3350a9d0eeec92b0a72a87d5537c21430945933086"
+    },
+    {
+      "operator": "vllm13::copy_blocks_mla",
+      "sha256": "fac8ccfddacca37b6e5d74226adcfb8bae2dbf2cf2faf8aa55a2c05c70756fe8"
+    },
+    {
+      "operator": "vllm13::cutlass_pack_scale_fp8",
+      "sha256": "726d832d706404c071b04384b7fe0a2b99bad9abc369a5823bf59345b0a75206"
+    },
+    {
+      "operator": "vllm13::cutlass_scaled_mm_azp",
+      "sha256": "776547503d6b166cae8c2bfb81a5a283cd9106802cbc447063718fbfbc0bd9aa"
+    },
+    {
+      "operator": "vllm13::fused_add_rms_norm",
+      "sha256": "c3c76260c86f49a04c044c5a008fc283628426f1f46f959a7cc611b3611d16e5"
+    },
+    {
+      "operator": "vllm13::gather_and_maybe_dequant_cache",
+      "sha256": "80684ad65c3ac8e684ba52b8c92571498ebccea1305a70bb1c2357d12d3e85aa"
+    },
+    {
+      "operator": "vllm13::marlin_int4_fp8_preprocess",
+      "sha256": "155ee13437d751dded236bcc42ac0be7684e1fdfe14e136f3945641f49b59aeb"
+    },
+    {
+      "operator": "vllm13::merge_attn_states",
+      "sha256": "0e54ec540f38174122a10d3a1f9f63403626fbea3702c3f81f294dbc78ada8b1"
+    },
+    {
+      "operator": "vllm13::moe_lora_align_block_size",
+      "sha256": "b53e749f4e9f246ab2d3212abc0935981e58e2b7f86d9b4f3a25cf0bcf3b0315"
+    },
+    {
+      "operator": "vllm13::moe_sum",
+      "sha256": "b01c4a8200ae610a02ccad97418f3ae9e9138adbdb22bb8084504577db7186af"
+    },
+    {
+      "operator": "vllm13::paged_attention_v1",
+      "sha256": "84717cf1a343cb8e7295dcb4f760c9b785b0addb07ac5a0417514d3ec027e837"
+    },
+    {
+      "operator": "vllm13::paged_attention_v2",
+      "sha256": "656fa1543d3bcce5f9622da7341569adad07f444e994d4a9117561953b75ed6e"
+    },
+    {
+      "operator": "vllm13::permute_cols",
+      "sha256": "561c337585b93d694802a54f26fb5ee1f05d4f685af3f898549ba6012373510c"
+    },
+    {
+      "operator": "vllm13::reshape_and_cache",
+      "sha256": "cf8aad3bb17994a11ee8ff2be665358a7fdd98b8d3f86d1b31e1be6fb6dbe2d7"
+    },
+    {
+      "operator": "vllm13::reshape_and_cache_flash",
+      "sha256": "bf2563ae45f89172168369b51aa448f2bf4d0dda94b4b6e0850089a5c8e27a61"
+    },
+    {
+      "operator": "vllm13::rms_norm",
+      "sha256": "e9bd62f7e7e5f79c6ab49c8693077d3d3eec52fbc4fe62186fc654ca7c92db0e"
+    },
+    {
+      "operator": "vllm13::rms_norm_dynamic_per_token_quant",
+      "sha256": "6f902f91e9339dfe1184067df0181ef571842af0ca96e1891171dc695c7a5f29"
+    },
+    {
+      "operator": "vllm13::rms_norm_per_block_quant",
+      "sha256": "a19f82535c28345d119948920e52ce75b2e08b3e6e2d36707d08f81329f09b68"
+    },
+    {
+      "operator": "vllm13::rotary_embedding",
+      "sha256": "d561564ba3d4cea6d5c3b76296a31034f24557cedaf6751b1cf9bbaaf7bc8cce"
+    },
+    {
+      "operator": "vllm13::scaled_fp8_quant",
+      "sha256": "a895e158b1e9d2f5c104c306c4c2c1a0942dedb6cb5907f3bad252611de7724c"
+    },
+    {
+      "operator": "vllm13::scaled_int8_quant",
+      "sha256": "7ede1446cb1847c5442453288313a3066fc7d8052b9a2469dfa22ba4afd1f62a"
+    },
+    {
+      "operator": "vllm13::selective_scan_fwd",
+      "sha256": "ed7b2a671d005f3b328a84820c841a4612bb376b298ba937b81b22ebafc9240f"
+    },
+    {
+      "operator": "vllm13::shuffle_rows",
+      "sha256": "f3a719a2e906392367e14e088ac297c7cd07e561cc4eb1dd57d94ceaed6cf3d7"
+    },
+    {
+      "operator": "vllm13::swap_blocks",
+      "sha256": "2d890d0c3c51b74fc0e176a81a97f749fbde6a63f1047d95325c2dbf33fbbafc"
+    },
+    {
+      "operator": "vllm13::topk_softmax",
+      "sha256": "ad47384748fdeb9d0339e358a7bdb6fc349d9280f448d704339e9fa9b5b26b62"
+    }
+  ]
+}

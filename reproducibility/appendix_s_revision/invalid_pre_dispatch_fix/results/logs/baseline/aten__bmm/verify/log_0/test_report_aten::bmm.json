@@ -1,0 +1,191 @@
+[
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "M": 1,
+      "N": 1,
+      "K": 32
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.009216000325977802,
+      "res_time": 0.008191999979317188,
+      "speedup": 1.1250000426325641,
+      "params": {
+        "dtype": "torch.float16",
+        "M": 1,
+        "N": 1,
+        "K": 32
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "M": 15,
+      "N": 160,
+      "K": 1024
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.014336000196635723,
+      "res_time": 0.014336000196635723,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float16",
+        "M": 15,
+        "N": 160,
+        "K": 1024
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "M": 495,
+      "N": 5333,
+      "K": 71
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.06860800087451935,
+      "res_time": 0.06860800087451935,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float16",
+        "M": 495,
+        "N": 5333,
+        "K": 71
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "M": 1,
+      "N": 1,
+      "K": 32
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.008191999979317188,
+      "res_time": 0.008191999979317188,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32",
+        "M": 1,
+        "N": 1,
+        "K": 32
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "M": 15,
+      "N": 160,
+      "K": 1024
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.03174399957060814,
+      "res_time": 0.03174399957060814,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32",
+        "M": 15,
+        "N": 160,
+        "K": 1024
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "M": 495,
+      "N": 5333,
+      "K": 71
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.1157120019197464,
+      "res_time": 0.11468800157308578,
+      "speedup": 1.0089285743287457,
+      "params": {
+        "dtype": "torch.float32",
+        "M": 495,
+        "N": 5333,
+        "K": 71
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "M": 1,
+      "N": 1,
+      "K": 32
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.0071680000983178616,
+      "res_time": 0.008191999979317188,
+      "speedup": 0.8750000142108547,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "M": 1,
+        "N": 1,
+        "K": 32
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "M": 15,
+      "N": 160,
+      "K": 1024
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.014336000196635723,
+      "res_time": 0.014336000196635723,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "M": 15,
+        "N": 160,
+        "K": 1024
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "M": 495,
+      "N": 5333,
+      "K": 71
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.06860800087451935,
+      "res_time": 0.06860800087451935,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "M": 495,
+        "N": 5333,
+        "K": 71
+      }
+    }
+  }
+]

@@ -505,6 +505,17 @@ def get_kernelgenbench_operators():
 
 def is_pytorch_op(api: str, namespace: str = "") -> bool:
     """Return True if api is a registered PyTorch operator in IMPL_INFO."""
-    if namespace:
+    if namespace not in ("", "aten"):
         return False
-    return api in IMPL_INFO
+    if "::" in api:
+        prefix, api = api.split("::", 1)
+        if prefix != "aten":
+            return False
+    return api.split(".", 1)[0] in IMPL_INFO
+
+
+# Restore the dynamic registry rebinding that the release cleanup dropped: the
+# static dict above only enumerates overload variants for a subset of ATen
+# operators, whereas DynamicImplInfo resolves any operator from its schema.
+dynamic_impl_info = DynamicImplInfo()
+IMPL_INFO = dynamic_impl_info

@@ -1,0 +1,1019 @@
+[
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": 0,
+      "n": 1,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.011264000087976456,
+      "res_time": 0.011264000087976456,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": 0,
+        "n": 1,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": 0,
+      "n": 1,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.010239999741315842,
+      "res_time": 0.009216000325977802,
+      "speedup": 1.1111110437411356,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": 0,
+        "n": 1,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": 0,
+      "n": 1,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.009216000325977802,
+      "res_time": 0.009216000325977802,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": 0,
+        "n": 1,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": 0,
+      "n": 2,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.011264000087976456,
+      "res_time": 0.011264000087976456,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": 0,
+        "n": 2,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": 0,
+      "n": 2,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.01228800043463707,
+      "res_time": 0.013311999849975109,
+      "speedup": 0.9230769661299272,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": 0,
+        "n": 2,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": 0,
+      "n": 2,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.01228800043463707,
+      "res_time": 0.013311999849975109,
+      "speedup": 0.9230769661299272,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": 0,
+        "n": 2,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": -1,
+      "n": 1,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.009216000325977802,
+      "res_time": 0.009216000325977802,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": -1,
+        "n": 1,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": -1,
+      "n": 1,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.010239999741315842,
+      "res_time": 0.010239999741315842,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": -1,
+        "n": 1,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": -1,
+      "n": 1,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.011264000087976456,
+      "res_time": 0.011264000087976456,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": -1,
+        "n": 1,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": -1,
+      "n": 2,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.013311999849975109,
+      "res_time": 0.011264000087976456,
+      "speedup": 1.1818181592687267,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": -1,
+        "n": 2,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": -1,
+      "n": 2,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.014336000196635723,
+      "res_time": 0.015359999611973763,
+      "speedup": 0.9333333697131223,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": -1,
+        "n": 2,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16",
+      "dim": -1,
+      "n": 2,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.016383999958634377,
+      "res_time": 0.016383999958634377,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float16",
+        "dim": -1,
+        "n": 2,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": 0,
+      "n": 1,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.009216000325977802,
+      "res_time": 0.009216000325977802,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": 0,
+        "n": 1,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": 0,
+      "n": 1,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.009216000325977802,
+      "res_time": 0.009216000325977802,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": 0,
+        "n": 1,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": 0,
+      "n": 1,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.010239999741315842,
+      "res_time": 0.010239999741315842,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": 0,
+        "n": 1,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": 0,
+      "n": 2,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.013311999849975109,
+      "res_time": 0.011264000087976456,
+      "speedup": 1.1818181592687267,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": 0,
+        "n": 2,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": 0,
+      "n": 2,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.01228800043463707,
+      "res_time": 0.013311999849975109,
+      "speedup": 0.9230769661299272,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": 0,
+        "n": 2,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": 0,
+      "n": 2,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.01228800043463707,
+      "res_time": 0.01228800043463707,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": 0,
+        "n": 2,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": -1,
+      "n": 1,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.009216000325977802,
+      "res_time": 0.009216000325977802,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": -1,
+        "n": 1,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": -1,
+      "n": 1,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.010239999741315842,
+      "res_time": 0.010239999741315842,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": -1,
+        "n": 1,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": -1,
+      "n": 1,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.010239999741315842,
+      "res_time": 0.010239999741315842,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": -1,
+        "n": 1,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": -1,
+      "n": 2,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.011264000087976456,
+      "res_time": 0.011264000087976456,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": -1,
+        "n": 2,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": -1,
+      "n": 2,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.015359999611973763,
+      "res_time": 0.013311999849975109,
+      "speedup": 1.1538461377012772,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": -1,
+        "n": 2,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32",
+      "dim": -1,
+      "n": 2,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.014336000196635723,
+      "res_time": 0.014336000196635723,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32",
+        "dim": -1,
+        "n": 2,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": 0,
+      "n": 1,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.009216000325977802,
+      "res_time": 0.009216000325977802,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": 0,
+        "n": 1,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": 0,
+      "n": 1,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.009216000325977802,
+      "res_time": 0.009216000325977802,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": 0,
+        "n": 1,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": 0,
+      "n": 1,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.009216000325977802,
+      "res_time": 0.010239999741315842,
+      "speedup": 0.9000000545696835,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": 0,
+        "n": 1,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": 0,
+      "n": 2,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.011264000087976456,
+      "res_time": 0.013311999849975109,
+      "speedup": 0.8461538622987227,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": 0,
+        "n": 2,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": 0,
+      "n": 2,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.01228800043463707,
+      "res_time": 0.01228800043463707,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": 0,
+        "n": 2,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": 0,
+      "n": 2,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.013311999849975109,
+      "res_time": 0.01228800043463707,
+      "speedup": 1.0833332828058517,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": 0,
+        "n": 2,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": -1,
+      "n": 1,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.009216000325977802,
+      "res_time": 0.009216000325977802,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": -1,
+        "n": 1,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": -1,
+      "n": 1,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.010239999741315842,
+      "res_time": 0.010239999741315842,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": -1,
+        "n": 1,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": -1,
+      "n": 1,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.011264000087976456,
+      "res_time": 0.011264000087976456,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": -1,
+        "n": 1,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": -1,
+      "n": 2,
+      "shape": [
+        16
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.013311999849975109,
+      "res_time": 0.011264000087976456,
+      "speedup": 1.1818181592687267,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": -1,
+        "n": 2,
+        "shape": [
+          16
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": -1,
+      "n": 2,
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.015359999611973763,
+      "res_time": 0.014336000196635723,
+      "speedup": 1.0714285296660602,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": -1,
+        "n": 2,
+        "shape": [
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16",
+      "dim": -1,
+      "n": 2,
+      "shape": [
+        8,
+        16,
+        32
+      ]
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.015359999611973763,
+      "res_time": 0.015359999611973763,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.bfloat16",
+        "dim": -1,
+        "n": 2,
+        "shape": [
+          8,
+          16,
+          32
+        ]
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float16"
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.01945599913597107,
+      "res_time": 0.01945599913597107,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float16"
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.float32"
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.01945599913597107,
+      "res_time": 0.01945599913597107,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.float32"
+      }
+    }
+  },
+  {
+    "params": {
+      "dtype": "torch.bfloat16"
+    },
+    "success": true,
+    "traceback": null,
+    "speedup": {
+      "ref_time": 0.01945599913597107,
+      "res_time": 0.01945599913597107,
+      "speedup": 1.0,
+      "params": {
+        "dtype": "torch.bfloat16"
+      }
+    }
+  }
+]

@@ -1,0 +1,186 @@
+{
+  "note": "Reference candidates for exercising the released verification pipeline end to end. Each entry passes the published suite and the held-out suite; the held-out grids add shapes and strides not exposed to the generator or the agent.",
+  "count": 20,
+  "entries": [
+    {
+      "op": "aten::_to_copy",
+      "file": "aten___to_copy.py",
+      "sha256": "949322d124bcefa3361b35c4eec1c880e7ca1dbfa3eb41308fe46649a15fa9a8",
+      "baseline_tests": 26,
+      "baseline_passed": 26,
+      "heldout_tests": 50,
+      "heldout_passed": 50
+    },
+    {
+      "op": "aten::argmax",
+      "file": "aten__argmax.py",
+      "sha256": "0c99f7016c485b10e281fe36ecb345c4a033f29374758493d90802c049d4c4cf",
+      "baseline_tests": 126,
+      "baseline_passed": 126,
+      "heldout_tests": 180,
+      "heldout_passed": 180
+    },
+    {
+      "op": "aten::bitwise_not",
+      "file": "aten__bitwise_not.py",
+      "sha256": "19dc0d3eb0d0ef9962275bf51fc7d09a9c8714fc755c94e1daaaed76d0c49e65",
+      "baseline_tests": 18,
+      "baseline_passed": 18,
+      "heldout_tests": 36,
+      "heldout_passed": 36
+    },
+    {
+      "op": "aten::clone",
+      "file": "aten__clone.py",
+      "sha256": "59580555197e973f60ce89f8bf0e54ea5eb9091a4367f62a0797adbe5b0e98a9",
+      "baseline_tests": 36,
+      "baseline_passed": 36,
+      "heldout_tests": 66,
+      "heldout_passed": 66
+    },
+    {
+      "op": "aten::contiguous",
+      "file": "aten__contiguous.py",
+      "sha256": "5eab19d17eb3a4f1fcd4e7aca1646c1efd52cbcbe2b6f615d66790e35d0311a1",
+      "baseline_tests": 30,
+      "baseline_passed": 30,
+      "heldout_tests": 60,
+      "heldout_passed": 60
+    },
+    {
+      "op": "aten::cos",
+      "file": "aten__cos.py",
+      "sha256": "fdde12f56fb43cfba0e466cf607c4f7c8a8cedcc2e9216ef5c6413417694c656",
+      "baseline_tests": 18,
+      "baseline_passed": 18,
+      "heldout_tests": 36,
+      "heldout_passed": 36
+    },
+    {
+      "op": "aten::eq",
+      "file": "aten__eq.py",
+      "sha256": "4b166421174d38c23c2c9b49698436aafbd2ef0e9d250d19f2e420f1ea2e9f5e",
+      "baseline_tests": 36,
+      "baseline_passed": 36,
+      "heldout_tests": 72,
+      "heldout_passed": 72
+    },
+    {
+      "op": "aten::exponential_",
+      "file": "aten__exponential_.py",
+      "sha256": "4a8dfc25b8133f19852855ffdaddb913d7b0ecdfa0c3e6d9fed4cfd0b77e97f9",
+      "baseline_tests": 3,
+      "baseline_passed": 3,
+      "heldout_tests": 6,
+      "heldout_passed": 6
+    },
+    {
+      "op": "aten::floor_divide",
+      "file": "aten__floor_divide.py",
+      "sha256": "9f34aebf1c8d29f026e3683acd04206ef09fd9316a5a25a6d82ff5f2076111b1",
+      "baseline_tests": 20,
+      "baseline_passed": 20,
+      "heldout_tests": 38,
+      "heldout_passed": 38
+    },
+    {
+      "op": "aten::full",
+      "file": "aten__full.py",
+      "sha256": "d81c9dd244cbc337233c564c3a66f5084d9884fe3e985d272696926d1bd52d1b",
+      "baseline_tests": 144,
+      "baseline_passed": 144,
+      "heldout_tests": 288,
+      "heldout_passed": 288
+    },
+    {
+      "op": "aten::gt",
+      "file": "aten__gt.py",
+      "sha256": "a884ab47ed8bcdcd496dc3cfba73eaf66e722720c36d2f53db66a509bb3aad7e",
+      "baseline_tests": 36,
+      "baseline_passed": 36,
+      "heldout_tests": 72,
+      "heldout_passed": 72
+    },
+    {
+      "op": "aten::index_select",
+      "file": "aten__index_select.py",
+      "sha256": "59e036b42f29f096800fbb829ddb60c6148d76715fddd5b9dbd0964292d08831",
+      "baseline_tests": 18,
+      "baseline_passed": 18,
+      "heldout_tests": 36,
+      "heldout_passed": 36
+    },
+    {
+      "op": "aten::le",
+      "file": "aten__le.py",
+      "sha256": "56d3779bc68200898b1051e8c057a7aa0f38516171e28db4f733d2464760e340",
+      "baseline_tests": 36,
+      "baseline_passed": 36,
+      "heldout_tests": 72,
+      "heldout_passed": 72
+    },
+    {
+      "op": "cublas::cublasDcopy_v2",
+      "file": "cublas__cublasDcopy_v2.py",
+      "sha256": "a65f4ab65a63d23e15ed856bcbcc8a2d130114d2739bb54276266115532db330",
+      "baseline_tests": 63,
+      "baseline_passed": 63,
+      "heldout_tests": 63,
+      "heldout_passed": 90
+    },
+    {
+      "op": "cublas::cublasSdot_v2",
+      "file": "cublas__cublasSdot_v2.py",
+      "sha256": "d37d10a44a29f3990f5f11e309f8278b72e215719898e6ca7eb3fe63277ee8eb",
+      "baseline_tests": 99,
+      "baseline_passed": 99,
+      "heldout_tests": 99,
+      "heldout_passed": 126
+    },
+    {
+      "op": "cublas::cublasSaxpy_v2",
+      "file": "cublas__cublasSaxpy_v2.py",
+      "sha256": "0703c734f204e6ab2ae135b947b0f7715c5115bb18d444296c79411e227beadf",
+      "baseline_tests": 648,
+      "baseline_passed": 648,
+      "heldout_tests": 648,
+      "heldout_passed": 864
+    },
+    {
+      "op": "cublas::cublasSscal_v2",
+      "file": "cublas__cublasSscal_v2.py",
+      "sha256": "f7e33b0e05e38d2b19601cf4bb4f3dccd688f47b0d64ac34a42bb7e261729801",
+      "baseline_tests": 216,
+      "baseline_passed": 216,
+      "heldout_tests": 216,
+      "heldout_passed": 288
+    },
+    {
+      "op": "vllm13::rms_norm",
+      "file": "vllm13__rms_norm.py",
+      "sha256": "e9bd62f7e7e5f79c6ab49c8693077d3d3eec52fbc4fe62186fc654ca7c92db0e",
+      "baseline_tests": 60,
+      "baseline_passed": 60,
+      "heldout_tests": 60,
+      "heldout_passed": 84
+    },
+    {
+      "op": "vllm13::permute_cols",
+      "file": "vllm13__permute_cols.py",
+      "sha256": "561c337585b93d694802a54f26fb5ee1f05d4f685af3f898549ba6012373510c",
+      "baseline_tests": 30,
+      "baseline_passed": 30,
+      "heldout_tests": 30,
+      "heldout_passed": 42
+    },
+    {
+      "op": "vllm13::merge_attn_states",
+      "file": "vllm13__merge_attn_states.py",
+      "sha256": "0e54ec540f38174122a10d3a1f9f63403626fbea3702c3f81f294dbc78ada8b1",
+      "baseline_tests": 18,
+      "baseline_passed": 18,
+      "heldout_tests": 18,
+      "heldout_passed": 24
+    }
+  ]
+}

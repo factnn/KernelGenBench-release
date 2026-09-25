@@ -1,0 +1,19 @@
+
+{'ref_time': 0.011264000087976456, 'res_time': 0.011264000087976456, 'speedup': 1.0, 'params': {'dtype': 'torch.int16', 'shape': []}}
+{'ref_time': 0.009216000325977802, 'res_time': 0.009216000325977802, 'speedup': 1.0, 'params': {'dtype': 'torch.int16', 'shape': [1]}}
+{'ref_time': 0.015359999611973763, 'res_time': 0.015359999611973763, 'speedup': 1.0, 'params': {'dtype': 'torch.int16', 'shape': [1024, 1024]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'dtype': 'torch.int16', 'shape': [20, 320, 15]}}
+{'ref_time': 0.04505600035190582, 'res_time': 0.04505600035190582, 'speedup': 1.0, 'params': {'dtype': 'torch.int16', 'shape': [16, 128, 64, 60]}}
+{'ref_time': 0.03788800165057182, 'res_time': 0.03993599861860275, 'speedup': 0.9487180228647909, 'params': {'dtype': 'torch.int16', 'shape': [16, 7, 57, 32, 29]}}
+{'ref_time': 0.009216000325977802, 'res_time': 0.009216000325977802, 'speedup': 1.0, 'params': {'dtype': 'torch.int32', 'shape': []}}
+{'ref_time': 0.009216000325977802, 'res_time': 0.009216000325977802, 'speedup': 1.0, 'params': {'dtype': 'torch.int32', 'shape': [1]}}
+{'ref_time': 0.020479999482631683, 'res_time': 0.020479999482631683, 'speedup': 1.0, 'params': {'dtype': 'torch.int32', 'shape': [1024, 1024]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'dtype': 'torch.int32', 'shape': [20, 320, 15]}}
+{'ref_time': 0.10547199845314026, 'res_time': 0.10547199845314026, 'speedup': 1.0, 'params': {'dtype': 'torch.int32', 'shape': [16, 128, 64, 60]}}
+{'ref_time': 0.07577600330114365, 'res_time': 0.07475200295448303, 'speedup': 1.0136986342330403, 'params': {'dtype': 'torch.int32', 'shape': [16, 7, 57, 32, 29]}}
+{'ref_time': 0.009216000325977802, 'res_time': 0.009216000325977802, 'speedup': 1.0, 'params': {'dtype': 'torch.bool', 'shape': []}}
+{'ref_time': 0.009216000325977802, 'res_time': 0.009216000325977802, 'speedup': 1.0, 'params': {'dtype': 'torch.bool', 'shape': [1]}}
+{'ref_time': 0.013311999849975109, 'res_time': 0.013311999849975109, 'speedup': 1.0, 'params': {'dtype': 'torch.bool', 'shape': [1024, 1024]}}
+{'ref_time': 0.010239999741315842, 'res_time': 0.010239999741315842, 'speedup': 1.0, 'params': {'dtype': 'torch.bool', 'shape': [20, 320, 15]}}
+{'ref_time': 0.028672000393271446, 'res_time': 0.028672000393271446, 'speedup': 1.0, 'params': {'dtype': 'torch.bool', 'shape': [16, 128, 64, 60]}}
+{'ref_time': 0.027648000046610832, 'res_time': 0.028672000393271446, 'speedup': 0.9642857026850167, 'params': {'dtype': 'torch.bool', 'shape': [16, 7, 57, 32, 29]}}

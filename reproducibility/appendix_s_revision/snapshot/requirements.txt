@@ -1,0 +1,17 @@
+anthropic>=0.71.0
+fastapi>=0.134.0
+httpx>=0.28.0
+ijson>=3.5.0
+openai>=2.24.0
+pydantic>=2.12.5
+pytest>=9.0.2
+PyYAML>=6.0.3
+rich>=14.3.3
+setuptools>=80.0.0
+tqdm>=4.67.3
+uvicorn>=0.41.0
+# Install manually (version depends on your CUDA):
+# numpy
+# scipy
+# torch
+# triton

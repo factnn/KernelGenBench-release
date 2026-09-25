@@ -1,0 +1,37 @@
+
+{'ref_time': 0.008191999979317188, 'res_time': 0.0071680000983178616, 'speedup': 1.1428571242960268, 'params': {'dtype': 'torch.float16', 'shape': []}}
+{'ref_time': 0.006144000217318535, 'res_time': 0.006144000217318535, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [1]}}
+{'ref_time': 0.01228800043463707, 'res_time': 0.01228800043463707, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [1024, 1024]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [20, 320, 15]}}
+{'ref_time': 0.03379200026392937, 'res_time': 0.03379200026392937, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [16, 128, 64, 60]}}
+{'ref_time': 0.02969600073993206, 'res_time': 0.02969600073993206, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'shape': [16, 7, 57, 32, 29]}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.006144000217318535, 'speedup': 1.1666666414029259, 'params': {'dtype': 'torch.float32', 'shape': []}}
+{'ref_time': 0.006144000217318535, 'res_time': 0.0071680000983178616, 'speedup': 0.8571428757039733, 'params': {'dtype': 'torch.float32', 'shape': [1]}}
+{'ref_time': 0.015359999611973763, 'res_time': 0.015359999611973763, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [1024, 1024]}}
+{'ref_time': 0.008191999979317188, 'res_time': 0.008191999979317188, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [20, 320, 15]}}
+{'ref_time': 0.05734400078654289, 'res_time': 0.05632000043988228, 'speedup': 1.0181818241950062, 'params': {'dtype': 'torch.float32', 'shape': [16, 128, 64, 60]}}
+{'ref_time': 0.048128001391887665, 'res_time': 0.048128001391887665, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'shape': [16, 7, 57, 32, 29]}}
+{'ref_time': 0.006144000217318535, 'res_time': 0.0071680000983178616, 'speedup': 0.8571428757039733, 'params': {'dtype': 'torch.bfloat16', 'shape': []}}
+{'ref_time': 0.006144000217318535, 'res_time': 0.006144000217318535, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [1]}}
+{'ref_time': 0.01228800043463707, 'res_time': 0.01228800043463707, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [1024, 1024]}}
+{'ref_time': 0.008191999979317188, 'res_time': 0.008191999979317188, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [20, 320, 15]}}
+{'ref_time': 0.03276799991726875, 'res_time': 0.03276799991726875, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [16, 128, 64, 60]}}
+{'ref_time': 0.02969600073993206, 'res_time': 0.02969600073993206, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'shape': [16, 7, 57, 32, 29]}}
+{'ref_time': 0.006144000217318535, 'res_time': 0.0071680000983178616, 'speedup': 0.8571428757039733, 'params': {'dtype': 'torch.int32', 'shape': []}}
+{'ref_time': 0.006144000217318535, 'res_time': 0.006144000217318535, 'speedup': 1.0, 'params': {'dtype': 'torch.int32', 'shape': [1]}}
+{'ref_time': 0.015359999611973763, 'res_time': 0.015359999611973763, 'speedup': 1.0, 'params': {'dtype': 'torch.int32', 'shape': [1024, 1024]}}
+{'ref_time': 0.008191999979317188, 'res_time': 0.008191999979317188, 'speedup': 1.0, 'params': {'dtype': 'torch.int32', 'shape': [20, 320, 15]}}
+{'ref_time': 0.05734400078654289, 'res_time': 0.05632000043988228, 'speedup': 1.0181818241950062, 'params': {'dtype': 'torch.int32', 'shape': [16, 128, 64, 60]}}
+{'ref_time': 0.048128001391887665, 'res_time': 0.048128001391887665, 'speedup': 1.0, 'params': {'dtype': 'torch.int32', 'shape': [16, 7, 57, 32, 29]}}
+{'ref_time': 0.006144000217318535, 'res_time': 0.006144000217318535, 'speedup': 1.0, 'params': {'dtype': 'torch.int64', 'shape': []}}
+{'ref_time': 0.006144000217318535, 'res_time': 0.006144000217318535, 'speedup': 1.0, 'params': {'dtype': 'torch.int64', 'shape': [1]}}
+{'ref_time': 0.021503999829292297, 'res_time': 0.021503999829292297, 'speedup': 1.0, 'params': {'dtype': 'torch.int64', 'shape': [1024, 1024]}}
+{'ref_time': 0.009216000325977802, 'res_time': 0.009216000325977802, 'speedup': 1.0, 'params': {'dtype': 'torch.int64', 'shape': [20, 320, 15]}}
+{'ref_time': 0.10444799810647964, 'res_time': 0.10342399775981903, 'speedup': 1.0099009936653063, 'params': {'dtype': 'torch.int64', 'shape': [16, 128, 64, 60]}}
+{'ref_time': 0.08089599758386612, 'res_time': 0.08089599758386612, 'speedup': 1.0, 'params': {'dtype': 'torch.int64', 'shape': [16, 7, 57, 32, 29]}}
+{'ref_time': 0.008191999979317188, 'res_time': 0.008191999979317188, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'memory_format': 'torch.contiguous_format'}}
+{'ref_time': 0.006144000217318535, 'res_time': 0.006144000217318535, 'speedup': 1.0, 'params': {'dtype': 'torch.float16', 'memory_format': 'torch.preserve_format'}}
+{'ref_time': 0.008191999979317188, 'res_time': 0.008191999979317188, 'speedup': 1.0, 'params': {'dtype': 'torch.float32', 'memory_format': 'torch.contiguous_format'}}
+{'ref_time': 0.006144000217318535, 'res_time': 0.0071680000983178616, 'speedup': 0.8571428757039733, 'params': {'dtype': 'torch.float32', 'memory_format': 'torch.preserve_format'}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.0071680000983178616, 'speedup': 1.0, 'params': {'dtype': 'torch.bfloat16', 'memory_format': 'torch.contiguous_format'}}
+{'ref_time': 0.0071680000983178616, 'res_time': 0.006144000217318535, 'speedup': 1.1666666414029259, 'params': {'dtype': 'torch.bfloat16', 'memory_format': 'torch.preserve_format'}}

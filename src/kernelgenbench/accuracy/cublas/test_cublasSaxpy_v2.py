@@ -1,21 +1,11 @@
 import kernelgenbench
 from sandbox.config import DEVICE as device
 from sandbox.verifier.test_parametrize import parametrize, label
-from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_close
+from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_close, heldout_params
 import torch
 
 @label("cublasSaxpy_v2")
-@parametrize("n", [
-    1,          # Edge case
-    32,         # Edge case
-    71,         # Non-symmetric component
-    160,        # Non-symmetric component
-    497,        # 2D op dimension
-    1024,       # Non-symmetric component
-    4113,       # Non-aligned size
-    4096,       # Power-of-2 aligned
-    5333,       # Non-symmetric (large N)
-])
+@parametrize("n", heldout_params([1, 32, 71, 160, 497, 1024, 4113, 4096, 5333], [37, 257, 4097]))
 @parametrize("alpha", [
     1.0,        # Standard
     0.0,        # Standard

@@ -1,0 +1,145 @@
+# Triton Kernel Implementation Task
+
+You need to implement a Triton kernel for a PyTorch operator.
+
+## Task Information
+
+- **Operator**: arange
+- **Full Name**: aten::arange
+- **GPU ID**: 0
+
+## Environment
+
+- All GPU commands must be prefixed with `CUDA_VISIBLE_DEVICES=0`
+- Python path: `python`
+
+## Operator Specification
+
+### Function Signatures
+
+- `arange`: aten::arange(Scalar end, *, ScalarType? dtype=None, Layout? layout=None, Device? device=None, bool? pin_memory=None) -> Tensor
+- `arange.start`: aten::arange.start(Scalar start, Scalar end, *, ScalarType? dtype=None, Layout? layout=None, Device? device=None, bool? pin_memory=None) -> Tensor
+- `arange.start_step`: aten::arange.start_step(Scalar start, Scalar end, Scalar step=1, *, ScalarType? dtype=None, Layout? layout=None, Device? device=None, bool? pin_memory=None) -> Tensor
+- `arange.start_out`: aten::arange.start_out(Scalar start, Scalar end, Scalar step=1, *, Tensor(a!) out) -> Tensor(a!)
+- `arange.out`: aten::arange.out(Scalar end, *, Tensor(a!) out) -> Tensor(a!)
+
+### Interfaces to Implement
+
+- `arange` (autograd: disable)
+- `arange.start` (autograd: disable)
+- `arange.start_step` (autograd: disable)
+- `arange.start_out` (autograd: disable)
+- `arange.out` (autograd: disable)
+
+### Input/Output Arguments
+
+```
+aten::arange(Scalar end, *, ScalarType? dtype=None, Layout? layout=None, Device? device=None, bool? pin_memory=None) -> Tensor
+```
+
+## Implementation Requirements
+
+### 1. Code Structure
+
+Your implementation must include:
+1. **Triton kernel function**: core computation logic decorated with `@triton.jit`
+2. **Python wrapper functions**: one for each ATen interface variant
+
+### 2. Key Requirements
+
+**Must handle:**
+- **Broadcasting**: support inputs with different shapes following PyTorch broadcast semantics
+- **Non-contiguous tensors**: do not assume inputs are contiguous, use correct stride calculations
+- **All overload variants**: implement every listed interface variant
+
+**Naming convention:**
+- Wrapper function names must match ATen operator names
+- Replace `.` with `_` (e.g. `add.Tensor` → `add_Tensor`)
+
+### 3. Precision Requirements
+
+- For float16/bfloat16 inputs, accumulate internally in float32
+- Use `allow_tf32=False` for matrix operations to maintain precision
+
+## Example
+
+Implementation example for the `add` operator:
+
+```python
+import torch
+import triton
+import triton.language as tl
+
+
+@triton.jit
+def add_kernel(
+    x_ptr, y_ptr, output_ptr,
+    n_elements,
+    BLOCK_SIZE: tl.constexpr,
+):
+    pid = tl.program_id(axis=0)
+    block_start = pid * BLOCK_SIZE
+    offsets = block_start + tl.arange(0, BLOCK_SIZE)
+    mask = offsets < n_elements
+
+    x = tl.load(x_ptr + offsets, mask=mask)
+    y = tl.load(y_ptr + offsets, mask=mask)
+    output = x + y
+
+    tl.store(output_ptr + offsets, output, mask=mask)
+
+
+def add_Tensor(self: torch.Tensor, other: torch.Tensor, alpha: float = 1) -> torch.Tensor:
+    """Implements aten::add.Tensor"""
+    # Handle broadcasting
+    self, other = torch.broadcast_tensors(self, other)
+    # Ensure contiguity
+    self = self.contiguous()
+    other = other.contiguous()
+
+    output = torch.empty_like(self)
+    n_elements = output.numel()
+
+    grid = lambda meta: (triton.cdiv(n_elements, meta['BLOCK_SIZE']),)
+
+    # Handle alpha
+    if alpha != 1:
+        other = other * alpha
+
+    add_kernel[grid](self, other, output, n_elements, BLOCK_SIZE=1024)
+
+    return output
+
+
+def add_Scalar(self: torch.Tensor, other: float, alpha: float = 1) -> torch.Tensor:
+    """Implements aten::add.Scalar"""
+    return add_Tensor(self, torch.full_like(self, other), alpha)
+
+
+def add_out(self: torch.Tensor, other: torch.Tensor, alpha: float = 1, *, out: torch.Tensor) -> torch.Tensor:
+    """Implements aten::add.out"""
+    result = add_Tensor(self, other, alpha)
+    out.copy_(result)
+    return out
+```
+
+## Output Requirements
+
+**Important**: Output the complete Python code directly in your reply:
+
+1. Code must be wrapped in a ```python ... ``` code block
+2. Code must be runnable as-is, without modification
+3. Do not include test code or benchmark code
+4. Do not add extra explanations, output only the code block
+5. **Do not write code to a file**, output it directly in your reply
+
+Example output format:
+```python
+import torch
+import triton
+import triton.language as tl
+
+# Your implementation...
+```
+
+

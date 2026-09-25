@@ -475,6 +475,12 @@ def init_seed(seed):
 # keeps in-place operators on exactly the published protocol.
 
 
+def heldout_params(default, extra):
+    """Parameter grid used by a test: published values, plus the held-out values
+    appended when KGB_HELDOUT is enabled (never exposed to generator or agent)."""
+    return list(default) + list(extra) if HELDOUT_MODE else list(default)
+
+
 def _install_clone_free_timing():
     try:
         import triton.testing as _triton_testing
@@ -488,9 +494,11 @@ def _install_clone_free_timing():
     def _clone_free_do_bench(fn, *args, **kwargs):
         real_clone = torch.Tensor.clone
         recorded = []
+        probing = True
 
         def _identity_clone(self, *a, **k):
-            recorded.append((self, self._version))
+            if probing:
+                recorded.append((self, self._version))
             return self
 
         torch.Tensor.clone = _identity_clone
@@ -509,6 +517,7 @@ def _install_clone_free_timing():
                 torch.Tensor.clone = real_clone
                 return original(fn, *args, **kwargs)
 
+            probing = False
             return original(fn, *args, **kwargs)
         finally:
             torch.Tensor.clone = real_clone

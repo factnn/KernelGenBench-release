@@ -1,13 +1,13 @@
 import kernelgenbench
 from sandbox.config import DEVICE as device
 from sandbox.verifier.test_parametrize import parametrize, label
-from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_close
+from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_close, heldout_params
 from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 import torch
 import triton
 
 @label("rms_norm")
-@parametrize("shape", [(1, 32), (71, 497), (128, 512), (1024, 4096), (5333, 8192)])
+@parametrize("shape", heldout_params([(1, 32), (71, 497), (128, 512), (1024, 4096), (5333, 8192)], [(37, 129), (257, 1023)]))
 @parametrize("dtype", [torch.float16, torch.bfloat16, torch.float32])
 @parametrize("epsilon", [1e-6, 1e-5])
 @parametrize("weight_mode", ["ones", "randn"])

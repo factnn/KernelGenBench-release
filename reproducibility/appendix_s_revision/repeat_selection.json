@@ -1,0 +1,27 @@
+{
+  "seed": 42,
+  "selection_basis": "Five repaired tests plus source/operator variety, selected before revised baseline outcomes. Not a random sample or full benchmark confidence interval.",
+  "operators": [
+    "aten::bmm",
+    "aten::div_",
+    "aten::index",
+    "aten::index_put_",
+    "aten::pow",
+    "aten::affine_grid_generator",
+    "aten::bernoulli",
+    "aten::sort",
+    "aten::mul",
+    "aten::mean",
+    "aten::silu",
+    "aten::neg",
+    "aten::rsqrt",
+    "aten::softmax",
+    "cublas::cublasSgemm_v2",
+    "cublas::cublasSgemvBatched",
+    "cublas::cublasCgemv_v2",
+    "cublas::cublasSaxpy_v2",
+    "vllm13::rms_norm",
+    "vllm13::fused_add_rms_norm",
+    "vllm13::rotary_embedding"
+  ]
+}

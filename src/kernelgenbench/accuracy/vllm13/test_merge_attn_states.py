@@ -1,13 +1,13 @@
 import kernelgenbench
 from sandbox.config import DEVICE as device
 from sandbox.verifier.test_parametrize import parametrize, label
-from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_close
+from sandbox.utils.accuracy_utils import kernelgenbench_assert_close as assert_close, heldout_params
 from sandbox.utils.accuracy_utils import CustomBenchmarkResult
 import torch
 import triton
 
 @label("merge_attn_states")
-@parametrize("shape", [(1, 8, 64), (4, 8, 64), (4, 32, 128), (16, 8, 128), (16, 32, 64), (64, 32, 128)])
+@parametrize("shape", heldout_params([(1, 8, 64), (4, 8, 64), (4, 32, 128), (16, 8, 128), (16, 32, 64), (64, 32, 128)], [(3, 8, 96), (7, 16, 160)]))
 @parametrize("dtype", [torch.float16, torch.bfloat16, torch.float32])
 def test_accuracy_merge_attn_states(shape, dtype):
     # ===== Accuracy Test =====
