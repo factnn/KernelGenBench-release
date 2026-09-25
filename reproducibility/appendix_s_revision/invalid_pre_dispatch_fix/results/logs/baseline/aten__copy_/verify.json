@@ -1,9 +1,0 @@
-{
-  "passed": true,
-  "total_tests": 23,
-  "passed_tests": 23,
-  "failed_tests": 0,
-  "speedup": 1.0009222604877306,
-  "error": null,
-  "log_dir": "/share/project/zpy/KernelGenBench-release/reproducibility/appendix_s_revision/results/logs/baseline/aten__copy_/verify/log_0"
-}

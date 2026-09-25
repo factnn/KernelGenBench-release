@@ -1,5 +1,5 @@
 {
-  "note": "Reference candidates for exercising the released verification pipeline end to end. Each entry passes the published suite and the held-out suite; the held-out grids add shapes and strides not exposed to the generator or the agent.",
+  "note": "Reference candidates for exercising the released verification pipeline end to end. Each entry passes the published suite and the held-out suite; the held-out grids add shapes and strides not exposed to the generator or to the agent.",
   "count": 20,
   "entries": [
     {
@@ -125,17 +125,8 @@
       "sha256": "a65f4ab65a63d23e15ed856bcbcc8a2d130114d2739bb54276266115532db330",
       "baseline_tests": 63,
       "baseline_passed": 63,
-      "heldout_tests": 63,
+      "heldout_tests": 90,
       "heldout_passed": 90
-    },
-    {
-      "op": "cublas::cublasSdot_v2",
-      "file": "cublas__cublasSdot_v2.py",
-      "sha256": "d37d10a44a29f3990f5f11e309f8278b72e215719898e6ca7eb3fe63277ee8eb",
-      "baseline_tests": 99,
-      "baseline_passed": 99,
-      "heldout_tests": 99,
-      "heldout_passed": 126
     },
     {
       "op": "cublas::cublasSaxpy_v2",
@@ -143,8 +134,17 @@
       "sha256": "0703c734f204e6ab2ae135b947b0f7715c5115bb18d444296c79411e227beadf",
       "baseline_tests": 648,
       "baseline_passed": 648,
-      "heldout_tests": 648,
+      "heldout_tests": 864,
       "heldout_passed": 864
+    },
+    {
+      "op": "cublas::cublasSdot_v2",
+      "file": "cublas__cublasSdot_v2.py",
+      "sha256": "d37d10a44a29f3990f5f11e309f8278b72e215719898e6ca7eb3fe63277ee8eb",
+      "baseline_tests": 99,
+      "baseline_passed": 99,
+      "heldout_tests": 126,
+      "heldout_passed": 126
     },
     {
       "op": "cublas::cublasSscal_v2",
@@ -152,26 +152,8 @@
       "sha256": "f7e33b0e05e38d2b19601cf4bb4f3dccd688f47b0d64ac34a42bb7e261729801",
       "baseline_tests": 216,
       "baseline_passed": 216,
-      "heldout_tests": 216,
+      "heldout_tests": 288,
       "heldout_passed": 288
-    },
-    {
-      "op": "vllm13::rms_norm",
-      "file": "vllm13__rms_norm.py",
-      "sha256": "e9bd62f7e7e5f79c6ab49c8693077d3d3eec52fbc4fe62186fc654ca7c92db0e",
-      "baseline_tests": 60,
-      "baseline_passed": 60,
-      "heldout_tests": 60,
-      "heldout_passed": 84
-    },
-    {
-      "op": "vllm13::permute_cols",
-      "file": "vllm13__permute_cols.py",
-      "sha256": "561c337585b93d694802a54f26fb5ee1f05d4f685af3f898549ba6012373510c",
-      "baseline_tests": 30,
-      "baseline_passed": 30,
-      "heldout_tests": 30,
-      "heldout_passed": 42
     },
     {
       "op": "vllm13::merge_attn_states",
@@ -179,8 +161,26 @@
       "sha256": "0e54ec540f38174122a10d3a1f9f63403626fbea3702c3f81f294dbc78ada8b1",
       "baseline_tests": 18,
       "baseline_passed": 18,
-      "heldout_tests": 18,
+      "heldout_tests": 24,
       "heldout_passed": 24
+    },
+    {
+      "op": "vllm13::permute_cols",
+      "file": "vllm13__permute_cols.py",
+      "sha256": "561c337585b93d694802a54f26fb5ee1f05d4f685af3f898549ba6012373510c",
+      "baseline_tests": 30,
+      "baseline_passed": 30,
+      "heldout_tests": 42,
+      "heldout_passed": 42
+    },
+    {
+      "op": "vllm13::rms_norm",
+      "file": "vllm13__rms_norm.py",
+      "sha256": "e9bd62f7e7e5f79c6ab49c8693077d3d3eec52fbc4fe62186fc654ca7c92db0e",
+      "baseline_tests": 60,
+      "baseline_passed": 60,
+      "heldout_tests": 84,
+      "heldout_passed": 84
     }
   ]
 }

@@ -1,9 +1,0 @@
-{
-  "passed": true,
-  "total_tests": 72,
-  "passed_tests": 72,
-  "failed_tests": 0,
-  "speedup": 1.000228898329143,
-  "error": null,
-  "log_dir": "/share/project/zpy/KernelGenBench-release/reproducibility/appendix_s_revision/results/logs/baseline/aten__affine_grid_generator/verify/log_0"
-}

@@ -52,11 +52,10 @@ ATOL_MODE = os.environ.get("KGB_ATOL_MODE", "scaled").strip().lower()
 HELDOUT_MODE = os.environ.get("KGB_HELDOUT", "0") == "1"
 SEED_OFFSET = int(os.environ.get("KGB_SEED_OFFSET", "0"))
 TIMING_MODE = os.environ.get("KGB_TIMING_MODE", "clone").strip().lower()
-# When KGB_AUDIT points at a file, every comparison that passes the published
-# tolerance also records how much tolerance it actually needed.  A single
-# baseline run therefore yields the pass/fail outcome for a whole family of
-# tolerance rules (see scripts/analyze/tolerance_from_audit.py) at no extra
-# GPU cost.
+# When KGB_AUDIT points at a directory, every comparison that passes the
+# published tolerance also records how much tolerance it actually needed, and
+# ``reverify_corpus.py --audit-dir`` turns that record into the pass/fail
+# outcome for a whole family of tolerance rules at no extra GPU cost.
 AUDIT_PATH = os.environ.get("KGB_AUDIT", "").strip()
 
 if ATOL_MODE not in ("scaled", "const", "sqrt"):
@@ -161,6 +160,8 @@ def _record_tolerance_slack(res, ref, rtol, reduce_dim, dtype):
         slack = diff - rtol * mag
         slack = slack[~torch.isnan(slack)]
         max_slack = float(slack.max()) if slack.numel() else 0.0
+        max_diff = float(diff[~torch.isnan(diff)].max()) if diff.numel() else 0.0
+        ref_abs_max = float(mag[~torch.isnan(mag)].max()) if mag.numel() else 0.0
     except Exception:
         return
     audit({
@@ -169,6 +170,10 @@ def _record_tolerance_slack(res, ref, rtol, reduce_dim, dtype):
         "rtol": float(rtol),
         "dtype": str(dtype),
         "max_slack": max_slack,
+        # ``max_diff`` and ``ref_abs_max`` bound the same comparison normwise,
+        # which is what a scale-aware rule uses instead of a per-element one.
+        "max_diff": max_diff,
+        "ref_abs_max": ref_abs_max,
     })
 
 

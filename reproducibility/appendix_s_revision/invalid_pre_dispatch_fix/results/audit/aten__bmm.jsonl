@@ -1,9 +1,0 @@
-{"kind": "tolerance", "reduce_dim": 32, "rtol": 0.001, "dtype": "torch.float16", "max_slack": -3.600120544433594e-05, "pid": 2870731}
-{"kind": "tolerance", "reduce_dim": 1024, "rtol": 0.001, "dtype": "torch.float16", "max_slack": -2.5033950805664062e-06, "pid": 2870731}
-{"kind": "tolerance", "reduce_dim": 71, "rtol": 0.001, "dtype": "torch.float16", "max_slack": 0.0, "pid": 2870731}
-{"kind": "tolerance", "reduce_dim": 32, "rtol": 1e-05, "dtype": "torch.float32", "max_slack": -2.2790984075982124e-05, "pid": 2870731}
-{"kind": "tolerance", "reduce_dim": 1024, "rtol": 1e-05, "dtype": "torch.float32", "max_slack": -1.6403197378167533e-07, "pid": 2870731}
-{"kind": "tolerance", "reduce_dim": 71, "rtol": 1e-05, "dtype": "torch.float32", "max_slack": -2.6442065551024463e-11, "pid": 2870731}
-{"kind": "tolerance", "reduce_dim": 32, "rtol": 0.016, "dtype": "torch.bfloat16", "max_slack": -0.010009765625, "pid": 2870731}
-{"kind": "tolerance", "reduce_dim": 1024, "rtol": 0.016, "dtype": "torch.bfloat16", "max_slack": -3.647804260253906e-05, "pid": 2870731}
-{"kind": "tolerance", "reduce_dim": 71, "rtol": 0.016, "dtype": "torch.bfloat16", "max_slack": -7.62520357966423e-09, "pid": 2870731}

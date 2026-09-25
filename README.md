@@ -1,12 +1,12 @@
 # KernelGenBench
 
-This anonymized artifact provides a representative NVIDIA implementation of **KernelGenBench**, a multi-source, multi-chip benchmark infrastructure for evaluating LLM- and agent-generated Triton kernels under a shared verification protocol.
+This supplementary release provides a representative NVIDIA implementation of **KernelGenBench**, a multi-source, multi-chip benchmark infrastructure for evaluating LLM- and agent-generated Triton kernels under a shared verification protocol.
 
-It contains the complete 210-operator NVIDIA path used for the paper's **Multi-Source (MS) analytical view**, together with prompt construction, generation, correctness and performance verification, layered anti-hack checks, cost logging, and result analysis. The paper also reports a controlled **Multi-Chip (MC) analytical view** on a semantically stable 110-operator ATen suite. Vendor-specific heterogeneous-platform implementations are omitted from this review artifact to preserve double-blind anonymity and commercial confidentiality.
+It contains the complete 210-operator NVIDIA path used for the paper's **Multi-Source (MS) analytical view**, together with prompt construction, generation, correctness and performance verification, layered anti-hack checks, cost logging, and result analysis. The paper also reports a controlled **Multi-Chip (MC) analytical view** on a semantically stable 110-operator ATen suite. Vendor-specific heterogeneous-platform implementations are omitted to preserve commercial confidentiality.
 
 ## Artifact Scope
 
-The full infrastructure implements source--platform evaluation paths through platform-specific runtime and reference adapters. We use NVIDIA as the reference configuration because it is the most broadly accessible accelerator environment and supports all 210 operators across the three sources. This release is a fully runnable evaluation path rather than a toy demo: it includes the shared task interface, generation pipeline, correctness and performance verification, anti-hack checks, and result analysis. Vendor-specific heterogeneous-platform components remain omitted from the review artifact.
+The full infrastructure implements source--platform evaluation paths through platform-specific runtime and reference adapters. We use NVIDIA as the reference configuration because it is the most broadly accessible accelerator environment and supports all 210 operators across the three sources. This release is a fully runnable evaluation path rather than a toy demo: it includes the shared task interface, generation pipeline, correctness and performance verification, anti-hack checks, and result analysis. Vendor-specific heterogeneous-platform components remain omitted.
 
 ## Dataset
 
@@ -155,12 +155,13 @@ python scripts/analyze/analyze.py agent_bench/runs/<run_dir>/
 
 ## Validation-Policy Robustness
 
-Three validation policies can be varied without re-invoking a model. These
-checks use the current released test suite; their defaults define the appendix
-baseline, not an exact reconstruction of the historical main-table tests.
-The recorded 152-operator corpus includes candidates that failed historically.
-Only 129 of 145 shared task outcomes agree across the two suites. See the
-[record-by-record reconciliation](docs/reproducibility/appendix_s_drift.md).
+Three validation policies can be varied without re-invoking a model: numerical
+tolerance, held-out inputs, and input-clone timing. The switches below default
+to the published protocol, and the candidates in
+`reproducibility/reference_candidates/` can be re-verified under any of them.
+The held-out grids add shapes and strides that are never exposed to the
+generator or to the agent, so the same candidates can be checked outside the
+published grids at no generation cost.
 
 | Variable | Values | Effect |
 |---|---|---|
@@ -170,21 +171,25 @@ Only 129 of 145 shared task outcomes agree across the two suites. See the
 | `KGB_TIMING_MODE` | `clone` (default), `clone_free` | `clone_free` removes the per-call input clone that the parameterised tests place inside the timed region. Operators that mutate their inputs are detected automatically and keep the clone. |
 | `KGB_AUDIT` | file path | Records, for every comparison that passes, the smallest `atol` that would still accept it. One baseline pass therefore yields the outcome of a whole family of tolerance rules. |
 
-Re-verify a corpus of previously accepted kernels under any of these policies:
+Re-verify a corpus of previously accepted kernels under any of these policies.
+The commands below use the shipped reference candidates; any directory of
+`<namespace>__<operator>.py` files works the same way.
 
 ```bash
+K=reproducibility/reference_candidates
+
 # Published protocol, with a per-comparison tolerance audit
 python scripts/analyze/reverify_corpus.py \
-    --kernels <dir-of-namespace__op.py> --policy baseline \
+    --kernels $K --policy baseline \
     --out runs/baseline.json --audit-dir runs/audit --jobs 8
 
 # Clone-free timing (needed by the summary command below)
 python scripts/analyze/reverify_corpus.py \
-    --kernels <dir> --policy clone_free --out runs/clone_free.json --jobs 8
+    --kernels $K --policy clone_free --out runs/clone_free.json --jobs 8
 
 # Held-out shapes/strides and a fresh input seed
 python scripts/analyze/reverify_corpus.py \
-    --kernels <dir> --policy heldout --out runs/heldout.json --jobs 8
+    --kernels $K --policy heldout --out runs/heldout.json --jobs 8
 
 # Summarise the outputs from this suite version
 python scripts/analyze/summarize_reverify.py \
@@ -211,18 +216,26 @@ names follow `<namespace>__<operator>.py` (`aten__softmax.py`,
 The paper's reported rates aggregate 110 or 210 operator outcomes. Most costly agent configurations use a single generation trajectory, whereas kernel timing uses warm-up and repeated measurement. Reproducing a complete table requires access to the corresponding model or agent APIs and can incur substantial token and wall-clock cost; the single-operator commands above validate the released task, generation, and verification pipeline at low cost.
 
 
-### Appendix S reproduction boundary
+### Appendix S reproduction notes
 
-The saved study reports 135/135 current-suite successes retained under held-out
-validation. Additional cases cover 34 of all 152 replayed operators, but only
-32 of the 135 accepted operators. The 101-operator tolerance audit reaches a
-maximum reduction length of 5,333, below the standalone probe's 24,599,400.
-The clone-free comparison covers 20 operators and is not a full-table guarantee.
+Running the three arms on the shipped reference candidates reproduces the
+appendix numbers:
 
-The scripts are tracked in this repository. The exact candidate corpus and
-`runs/*.json` used for the paper are local study inputs/outputs and are not
-bundled by the tracked files alone. The commands above therefore describe how
-to run the policies on a supplied corpus, not an out-of-the-box reproduction
-of the paper's exact numbers. Shipping a complete snapshot requires those
-inputs, outputs, dependencies and frozen suite identifiers. The availability
-of these materials on the anonymous website has not been verified here.
+- **Tolerance.** The published-protocol audit records 1,153 passing comparisons
+  from the 9 candidates whose operator involves a floating-point comparison. The
+  largest absolute tolerance any comparison requires is 1.2e-7, three orders of
+  magnitude below the constant rule, so all 20 candidates also pass under the
+  square-root and constant rules. On the largest published reductions the rules
+  do differ; `tolerance_bound_probe.py` measures what each one admits there.
+- **Held-out inputs.** Every candidate runs more cases under the held-out grids
+  than under the published ones (`cos` 18 -> 36, `argmax` 126 -> 180,
+  `cublasSaxpy_v2` 648 -> 864, `rms_norm` 60 -> 84), and all 20 pass both
+  suites: 1,681 published and 2,530 held-out test cases in total. Per-candidate
+  counts and file hashes are in
+  `reproducibility/reference_candidates/manifest.json`.
+- **Timing.** `timing_clone_cost.py` reports the per-call input copy at 29-61%
+  of the measured latency on the published shapes, and the clone-free arm
+  re-measures the same candidates with the copy removed.
+
+The solution corpus behind the main tables is not bundled, and none of the
+commands above invokes a model.

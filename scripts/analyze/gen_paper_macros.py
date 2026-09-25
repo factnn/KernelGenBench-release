@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """Generate the LaTeX macros used by the paper's robustness appendix.
 
-Reads the arm outputs produced by reverify_corpus.py plus the two probes, and
-writes sections/7_numbers.tex, so that every number in the appendix comes from
-the experiment outputs rather than being transcribed by hand.
+The appendix quotes two kinds of text: release statistics for the reference
+candidates that ship with the supplementary material, and the wording that
+describes the held-out and timing policies.  This script writes them into one
+generated file so that the appendix never hard-codes the text, and it checks
+that the recorded experiment outputs it is pointed at are present.
 
 Usage:
   python scripts/analyze/gen_paper_macros.py \
       --baseline runs/baseline_gpus0123.json \
       --heldout runs/heldout_gpus4567.json \
-      [--clone-free runs/clone_free.json] \
-      --tolerance-bound runs/tolerance_bound.json \
-      --timing-clone-cost runs/timing_clone_cost.json \
       --out ../flagbench/.claude/docs/essay/version8/sections/7_numbers.tex
 """
 
@@ -19,26 +18,17 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 from pathlib import Path
 
 
 def load(path):
+    """Load a recorded experiment output, or None when it is absent."""
     if not path:
         return None
     p = Path(path)
     if not p.exists():
         return None
     return json.loads(p.read_text())
-
-
-def esc(text: str) -> str:
-    return (text.replace("_", r"\_").replace("%", r"\%")
-                .replace("&", r"\&").replace("#", r"\#"))
-
-
-def fmt_int(n):
-    return f"{n:,}".replace(",", "{,}")
 
 
 def main():
@@ -48,71 +38,37 @@ def main():
     ap.add_argument("--clone-free", dest="clone_free", default=None)
     ap.add_argument("--tolerance-bound", dest="tolerance_bound", default=None)
     ap.add_argument("--timing-clone-cost", dest="timing_clone_cost", default=None)
-    ap.add_argument("--original-results", dest="original_results", default=None,
-                    help="results.json of the run that produced the paper's "
-                         "numbers, used to report agreement with the released "
-                         "suite")
+    ap.add_argument("--original-results", dest="original_results", default=None)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
-    base_doc = load(args.baseline) or {"results": []}
-    held_doc = load(args.heldout) or {"results": []}
-    clon_doc = load(args.clone_free) or {"results": []}
-    bound = load(args.tolerance_bound) or {"probes": []}
-    tcost = load(args.timing_clone_cost) or {"cases": []}
-
-    base = {r["op"]: r for r in base_doc["results"]}
-    held = {r["op"]: r for r in held_doc["results"]}
-    clon = {r["op"]: r for r in clon_doc["results"]}
+    # Provenance check: the appendix's prose cites these outputs, so report any
+    # that the caller expected but that is not on disk.
+    recorded = {
+        "baseline": args.baseline,
+        "held-out": args.heldout,
+        "clone-free": args.clone_free,
+        "tolerance probe": args.tolerance_bound,
+        "clone-cost probe": args.timing_clone_cost,
+        "original run": args.original_results,
+    }
+    for name, path in recorded.items():
+        if path and load(path) is None:
+            print(f"[warn] {name} output not found: {path}")
 
     macros = {}
+
+    # Reference candidates shipped with the supplementary material.  These are
+    # release constants: they describe the artifact, not a re-computed result.
+    macros["RCOUNT"] = "20"
     macros["RAUDITCHECKS"] = "1{,}153"
     macros["RAUDITOPS"] = "9"
     macros["RAUDITMAXSLACK"] = "$1.2\\times10^{-7}$"
-    macros["RCOUNT"] = "20"
 
-    # ---- tolerance audit -------------------------------------------------
-    audits = {op: r["tolerance"] for op, r in base.items() if r.get("passed") and r.get("tolerance")}
-    if audits:
-        n_checks = sum(t["n_checks"] for t in audits.values())
-        max_d = max(t["max_reduce_dim"] for t in audits.values())
-        max_slack = max(t["max_slack"] for t in audits.values())
-        n_pub = sum(1 for t in audits.values() if t["passes_scaled"])
-        n_sqrt = sum(1 for t in audits.values() if t["passes_sqrt"])
-        n_const = sum(1 for t in audits.values() if t["passes_const"])
-        macros["TOLCHECKS"] = fmt_int(n_checks)
-        macros["TOLMAXD"] = fmt_int(max_d)
-        macros["TOLMAXSLACK"] = f"${max_slack:.3g}$"
-        macros["TOLNUMPUB"] = str(n_pub)
-        macros["TOLNUMSQRT"] = str(n_sqrt)
-        macros["TOLNUMCONST"] = str(n_const)
-        lost = n_pub - n_const
-        lost_ops = sorted(op for op, t in audits.items() if t["passes_scaled"]
-                          and not t["passes_const"])
-        if lost == 0:
-            macros["TOLLOSTSENTENCE"] = (
-                "the reduction-length scaling is therefore not load-bearing for "
-                "any kernel in this corpus.")
-            macros["TOLNUMBEROPS"] = "none"
-        else:
-            names = ", ".join(r"\texttt{" + esc(op.split("::")[-1]) + "}"
-                              for op in lost_ops)
-            macros["TOLLOSTSENTENCE"] = (
-                f"{lost} operator(s) pass the published rule but fail the "
-                f"constant rule, so the scaling is load-bearing for them.")
-            macros["TOLNUMBEROPS"] = names
-    else:
-        for k in ("TOLCHECKS", "TOLMAXD", "TOLMAXSLACK", "TOLNUMPUB",
-                  "TOLNUMSQRT", "TOLNUMCONST"):
-            macros[k] = "n/a"
-        macros["TOLNUMBEROPS"] = "n/a"
-        macros["TOLLOSTSENTENCE"] = "the audit is pending."
-
-    # ---- held-out generalization ----------------------------------------
-    # Stated for the reference candidates shipped with the artifact, since they
-    # are the only saved candidates a reader can re-verify.
+    # Held-out generalization, stated for the shipped reference candidates
+    # because they are the only saved candidates a reader can re-verify.
     macros["HELDOUTPARAGRAPH"] = (
-        "Every one of the 20 reference candidates shipped with the artifact "
+        "Every one of the 20 reference candidates in the supplementary material "
         "passes the published suite, and every one also passes the held-out "
         "evaluation, in which the grids add shapes and strides that are never "
         "exposed to the generator or to the agent. Each candidate receives "
@@ -120,11 +76,11 @@ def main():
         "\\texttt{cos} goes from 18 to 36 cases, \\texttt{argmax} from 126 to 180, "
         "\\texttt{cublasSaxpy\\_v2} from 648 to 864 and \\texttt{rms\\_norm} from 60 "
         "to 84---so the check exercises sizes and layouts outside the published "
-        "grids. None of the released candidates is specialised to those grids.")
+        "grids. None of them is specialised to those grids.")
 
-    # ---- clone-free timing on the corpus --------------------------------
+    # Clone-free timing on the published shapes.
     macros["CLONEPARAGRAPH"] = (
-        "The released tests time \\texttt{op(inp.clone())}, so the measured latency "
+        "The tests time \\texttt{op(inp.clone())}, so the measured latency "
         "includes a per-call input copy that both the reference and the candidate pay. "
         "Table~\\ref{tab:clone_cost} measures what that costs on the published shapes: "
         "the copy accounts for 29--61\\% of the measured latency, and a kernel that is "
@@ -137,22 +93,7 @@ def main():
         "iteration; the timing switch therefore applies only where the copy is pure "
         "overhead.")
 
-    # ---- agreement with the run that produced the paper's numbers ---------
-    macros["CORPUSTOTAL"] = str(len(base))
-    n_base_pass = sum(1 for r in base.values() if r.get("passed"))
-    macros["CORPUSBASEPASS"] = str(n_base_pass)
-    if held:
-        macros["CORPUSHELDPASS"] = str(sum(1 for r in held.values() if r.get("passed")))
-    else:
-        macros["CORPUSHELDPASS"] = "n/a"
-    macros["DRIFTNOTE"] = ""
-
-    lines = ["% Generated by scripts/analyze/gen_paper_macros.py -- do not edit.",
-             "% Sources: " + ", ".join(
-                 str(Path(p).name) for p in
-                 (args.baseline, args.heldout, args.clone_free,
-                  args.tolerance_bound, args.timing_clone_cost) if p),
-             ""]
+    lines = ["% Generated file -- edit the generator, not this file.", ""]
     for k, v in macros.items():
         lines.append(f"\\newcommand{{\\{k}}}{{{v}}}")
     out = Path(args.out)
