@@ -41,8 +41,8 @@ No model is invoked by any of the three commands. The policy switches they set
 ## What the three arms measure
 
 - **Tolerance.** Re-verifying the 20 candidates with `KGB_AUDIT` set records
-  1,153 passing comparisons, 9 of which come from operators with a reduction
-  length above one. The largest absolute tolerance any of them requires is
+  1,153 passing floating-point comparisons across 9 candidates. The largest
+  absolute tolerance any of them requires is
   1.2e-7, three orders of magnitude below the constant rule, so all 20 also pass
   under the square-root and constant rules. `scripts/analyze/tolerance_bound_probe.py`
   measures what each rule admits on the largest published reductions, where the

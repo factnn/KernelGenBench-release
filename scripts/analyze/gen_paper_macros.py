@@ -4,8 +4,10 @@
 The appendix quotes two kinds of text: release statistics for the reference
 candidates that ship with the supplementary material, and the wording that
 describes the held-out and timing policies.  This script writes them into one
-generated file so that the appendix never hard-codes the text, and it checks
-that the recorded experiment outputs it is pointed at are present.
+generated file. The numerical values are fixed statistics for the published
+release, not statistics recomputed from the supplied logs. Use
+summarize_reverify.py to calculate results for a new run. Supplied log paths
+are checked for existence and valid JSON.
 
 Usage:
   python scripts/analyze/gen_paper_macros.py \
@@ -54,7 +56,7 @@ def main():
     }
     for name, path in recorded.items():
         if path and load(path) is None:
-            print(f"[warn] {name} output not found: {path}")
+            raise SystemExit(f"{name} output not found: {path}")
 
     macros = {}
 
@@ -68,27 +70,26 @@ def main():
     # Held-out generalization, stated for the shipped reference candidates
     # because they are the only saved candidates a reader can re-verify.
     macros["HELDOUTPARAGRAPH"] = (
-        "Every one of the 20 reference candidates in the supplementary material "
-        "passes the published suite, and every one also passes the held-out "
-        "evaluation, in which the grids add shapes and strides that are never "
-        "exposed to the generator or to the agent. Each candidate receives "
-        "additional test cases rather than a new random draw alone---for example "
-        "\\texttt{cos} goes from 18 to 36 cases, \\texttt{argmax} from 126 to 180, "
+        "Across the 20 released kernels, the number of test cases increases from "
+        "1,681 to 2,530. All 20 kernels pass both suites. Each kernel receives "
+        "additional cases: \\texttt{cos} increases from 18 to 36, "
+        "\\texttt{argmax} from 126 to 180, "
         "\\texttt{cublasSaxpy\\_v2} from 648 to 864 and \\texttt{rms\\_norm} from 60 "
-        "to 84---so the check exercises sizes and layouts outside the published "
-        "grids. None of them is specialised to those grids.")
+        "to 84.")
 
     # Clone-free timing on the published shapes.
     macros["CLONEPARAGRAPH"] = (
-        "The tests time \\texttt{op(inp.clone())}, so the measured latency "
+        "For the operators in Table~\\ref{tab:clone_cost}, the tests time "
+        "\\texttt{op(inp.clone())}, so the measured latency "
         "includes a per-call input copy that both the reference and the candidate pay. "
         "Table~\\ref{tab:clone_cost} measures what that costs on the published shapes: "
-        "the copy accounts for 29--61\\% of the measured latency, and a kernel that is "
-        "genuinely $2\\times$ the reference is reported as $1.24$--$1.55\\times$. The "
-        "distortion is symmetric---it pulls the reported ratio toward parity, "
-        "understating a genuine speedup and overstating a genuine slowdown---and it "
-        "vanishes when the two implementations take the same kernel time, which is "
-        "why configurations measured near parity are unaffected. In-place operators "
+        "the copy accounts for 29--61\\% of the measured latency. Under a shared "
+        "additive copy cost, a kernel-only speedup of $2\\times$ corresponds to "
+        "a measured speedup of $1.24$--$1.55\\times$. The "
+        "shared clone overhead pulls the measured speedup toward $1\\times$, "
+        "understating speedups above $1\\times$ and overstating relative performance "
+        "below $1\\times$. The ratio is unchanged when the two implementations "
+        "take exactly the same kernel time. In-place operators "
         "retain the copy, because their benchmark loop needs a fresh input on every "
         "iteration; the timing switch therefore applies only where the copy is pure "
         "overhead.")
