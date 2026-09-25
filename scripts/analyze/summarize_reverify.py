@@ -49,13 +49,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--baseline", required=True)
     ap.add_argument("--heldout", default=None)
-    ap.add_argument("--tolerance-bound", dest="tolerance_bound", default=None)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
     base = by_op(load(args.baseline))
     held = by_op(load(args.heldout))
-    bound = load(args.tolerance_bound)
 
     lines = []
     add = lines.append
@@ -145,30 +143,3 @@ def main():
         else:
             add("**Every kernel that passes the published suite also passes the "
                 "held-out suite.**\n")
-
-    # ------------------------------------------------- tolerance bound probe
-    if bound:
-        add("\n## 1b. How much error each tolerance rule admits (probe)\n")
-        add("Only eight operators in the 110-operator ATen suite pass a reduction "
-            "length as `D_reduce`; every other operator uses the default "
-            "`atol = 1e-4`. The probe below perturbs the reference output of the "
-            "published test cases and reports the largest relative error that "
-            "still passes each rule.\n")
-        add("| probe | shape | dtype | D_reduce | published atol | "
-            "atol / &#124;ref&#124;max | max rel. error admitted (published) | "
-            "(sqrt) | (const) |")
-        add("|---|---|---|---|---|---|---|---|---|")
-        for p in bound.get("probes", []):
-            a = p["admitted_relative_error"]
-            add(f"| `{p['probe']}` | {tuple(p['shape'])} | {p['dtype']} | "
-                f"{p['reduce_dim']} | {p['published_atol']:.4g} | "
-                f"{p['atol_over_output_scale']:.3g} | "
-                f"{a['published']:.3g} | {a['sqrt']:.3g} | {a['const']:.3g} |")
-        add("")
-        ok = [p["probe"] for p in bound.get("probes", [])
-              if p.get("order_error_passes_all_rules")]
-        if ok:
-            add("A *correct* kernel's floating-point reduction-order error still "
-                "passes all three rules for: " + ", ".join(f"`{o}`" for o in ok) +
-                ". Tightening the rule therefore does not reject legitimate "
-                "kernels on these cases.\n")

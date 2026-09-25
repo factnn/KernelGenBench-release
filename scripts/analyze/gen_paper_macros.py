@@ -37,7 +37,6 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--baseline", required=True)
     ap.add_argument("--heldout", default=None)
-    ap.add_argument("--tolerance-bound", dest="tolerance_bound", default=None)
     ap.add_argument("--original-results", dest="original_results", default=None)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
@@ -47,7 +46,6 @@ def main():
     recorded = {
         "baseline": args.baseline,
         "held-out": args.heldout,
-        "tolerance probe": args.tolerance_bound,
         "original run": args.original_results,
     }
     for name, path in recorded.items():

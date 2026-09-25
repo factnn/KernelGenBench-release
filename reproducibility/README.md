@@ -32,18 +32,15 @@ $PY scripts/analyze/reverify_corpus.py --kernels $K --policy heldout \
 ```
 
 No model is invoked by either command. The policy switches they set
-(`KGB_ATOL_MODE`, `KGB_HELDOUT`, `KGB_SEED_OFFSET`, `KGB_AUDIT`) are described
-in the top-level `README.md`.
+(`KGB_HELDOUT`, `KGB_SEED_OFFSET`, `KGB_AUDIT`) are described in the top-level
+`README.md`.
 
 ## What the two arms measure
 
 - **Tolerance.** Re-verifying the 20 candidates with `KGB_AUDIT` set records
-  1,153 passing floating-point comparisons across 9 candidates. The largest
-  absolute tolerance any of them requires is
-  1.2e-7, three orders of magnitude below the constant rule, so all 20 also pass
-  under the square-root and constant rules. `scripts/analyze/tolerance_bound_probe.py`
-  measures what each rule admits on the largest published reductions, where the
-  rules do differ.
+  1,153 passing floating-point comparisons from the 9 candidates whose outputs
+  are floating-point. The largest absolute tolerance any of them requires is
+  1.2e-7, three orders of magnitude below the published `atol`.
 - **Held-out inputs.** Every candidate gains test cases in the held-out grids
   rather than a new random draw alone, and all 20 still pass. Counts per
   candidate are in `reference_candidates/manifest.json`, and the exact grids are

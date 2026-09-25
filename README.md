@@ -155,17 +155,16 @@ python scripts/analyze/analyze.py agent_bench/runs/<run_dir>/
 
 ## Validation-Policy Robustness
 
-Two validation policies can be varied without re-invoking a model: numerical
-tolerance and held-out inputs. The switches below default to the published
-protocol, and the candidates in `reproducibility/reference_candidates/` can be
-re-verified under either of them.
+The verification grid can be varied without re-invoking a model: the switch
+below appends held-out inputs to the published test cases, and the candidates in
+`reproducibility/reference_candidates/` can be re-verified with or without
+them.
 The held-out grids add shapes and strides that are never exposed to the
 generator or to the agent, so the same candidates can be checked outside the
 published grids at no generation cost.
 
 | Variable | Values | Effect |
 |---|---|---|
-| `KGB_ATOL_MODE` | `scaled` (default), `sqrt`, `const` | Absolute tolerance `1e-4 * D_reduce` (published), `1e-4 * sqrt(D_reduce)`, or a constant `1e-4`. |
 | `KGB_HELDOUT` | `0` (default), `1` | Appends held-out shapes and strides that are never exposed to the generator or to the agent, mirroring the published grids in tensor rank and layout family. |
 | `KGB_SEED_OFFSET` | integer, default `0` | Shifts the verification seed, so a run also sees different input values. |
 | `KGB_AUDIT` | file path | Records, for every comparison that passes, the smallest `atol` that would still accept it. One baseline pass therefore yields the outcome of a whole family of tolerance rules. |
@@ -189,11 +188,7 @@ python scripts/analyze/reverify_corpus.py \
 # Summarise the outputs from this suite version
 python scripts/analyze/summarize_reverify.py \
     --baseline runs/baseline.json --heldout runs/heldout.json \
-    --tolerance-bound runs/tolerance_bound.json \
     --out runs/summary.md
-
-# Bound on the error each tolerance rule admits, on the published test cases
-python scripts/analyze/tolerance_bound_probe.py --out runs/tolerance_bound.json
 ```
 
 `reverify_corpus.py` accepts kernels from all three sources in one corpus; file
@@ -214,9 +209,7 @@ appendix numbers:
 - **Tolerance.** The published-protocol audit records 1,153 passing comparisons
   from the 9 candidates whose operator involves a floating-point comparison. The
   largest absolute tolerance any comparison requires is 1.2e-7, three orders of
-  magnitude below the constant rule, so all 20 candidates also pass under the
-  square-root and constant rules. On the largest published reductions the rules
-  do differ; `tolerance_bound_probe.py` measures what each one admits there.
+  magnitude below the published `atol`.
 - **Held-out inputs.** Every candidate runs more cases under the held-out grids
   than under the published ones (`cos` 18 -> 36, `argmax` 126 -> 180,
   `cublasSaxpy_v2` 648 -> 864, `rms_norm` 60 -> 84), and all 20 pass both

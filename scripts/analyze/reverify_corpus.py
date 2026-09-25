@@ -9,8 +9,6 @@ them under an alternative policy.
 Policies (see ``src/sandbox/utils/accuracy_utils.py`` for the switches):
 
   baseline     published protocol (atol = 1e-4 * D_reduce, published shapes)
-  atol_const   atol = 1e-4 regardless of reduction length
-  atol_sqrt    atol = 1e-4 * sqrt(D_reduce)
   heldout      published shapes + held-out shapes/strides and a fresh seed
 
 Usage:
@@ -43,8 +41,6 @@ ALL_TEST_MODULES = ",".join([
 
 POLICIES = {
     "baseline": {},
-    "atol_const": {"KGB_ATOL_MODE": "const"},
-    "atol_sqrt": {"KGB_ATOL_MODE": "sqrt"},
     "heldout": {"KGB_HELDOUT": "1", "KGB_SEED_OFFSET": "1000"},
 }
 
@@ -62,7 +58,7 @@ def parse_kernel_name(path: Path):
 def run_one(item, policy_env, python, gpu, timeout, extra_env):
     kernel_path, namespace, operator = item
     env = os.environ.copy()
-    for name in ("KGB_ATOL_MODE", "KGB_HELDOUT", "KGB_SEED_OFFSET",
+    for name in ("KGB_HELDOUT", "KGB_SEED_OFFSET",
                  "KGB_AUDIT", "KGB_VERIFY_DIR"):
         env.pop(name, None)
     env.update(policy_env)

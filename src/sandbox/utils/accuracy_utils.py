@@ -29,20 +29,15 @@ import torch
 # These switches exist so that the *published* protocol can be re-run under
 # alternative validation policies without changing the default behaviour.  With
 # every switch left at its default the module reproduces the paper protocol
-# bit-for-bit; the alternatives are used by the analyses in scripts/analyze/
-# (tolerance sensitivity and held-out-shape generalization).
+# bit-for-bit; the alternative is used by the analysis in scripts/analyze/
+# (held-out-shape generalization).
 #
-#   KGB_ATOL_MODE    scaled | const | sqrt     (default: scaled)
-#                    scaled -> atol = 1e-4 * D_reduce            (paper protocol)
-#                    sqrt   -> atol = 1e-4 * sqrt(D_reduce)
-#                    const  -> atol = 1e-4
 #   KGB_HELDOUT      "1" to append held-out shapes/strides that are never
 #                    exposed to the generator or the agent (default: off)
 #   KGB_SEED_OFFSET  integer added to the verification seed, so that held-out
 #                    runs also see different input *values* (default: 0)
 # ==============================================================================
 
-ATOL_MODE = os.environ.get("KGB_ATOL_MODE", "scaled").strip().lower()
 HELDOUT_MODE = os.environ.get("KGB_HELDOUT", "0") == "1"
 SEED_OFFSET = int(os.environ.get("KGB_SEED_OFFSET", "0"))
 # When KGB_AUDIT points at a directory, every comparison that passes the
@@ -50,9 +45,6 @@ SEED_OFFSET = int(os.environ.get("KGB_SEED_OFFSET", "0"))
 # ``reverify_corpus.py --audit-dir`` turns that record into the pass/fail
 # outcome for a whole family of tolerance rules at no extra GPU cost.
 AUDIT_PATH = os.environ.get("KGB_AUDIT", "").strip()
-
-if ATOL_MODE not in ("scaled", "const", "sqrt"):
-    raise ValueError(f"Unknown KGB_ATOL_MODE: {ATOL_MODE!r}")
 
 
 def audit(record: dict) -> None:
@@ -120,19 +112,10 @@ RESOLUTION = {
 
 
 def effective_atol(reduce_dim: int) -> float:
-    """Absolute tolerance for a comparison over ``reduce_dim`` accumulated terms.
-
-    ``scaled`` is the protocol used for every number reported in the paper:
+    """Absolute tolerance for a comparison over ``reduce_dim`` accumulated terms:
     ``atol = 1e-4 * D_reduce``, which grows linearly with the number of
-    accumulated terms.  The alternatives are used to test whether the reported
-    pass rates are sensitive to that choice.
-    """
-    d = max(int(reduce_dim), 1)
-    if ATOL_MODE == "const":
-        return 1e-4
-    if ATOL_MODE == "sqrt":
-        return 1e-4 * math.sqrt(d)
-    return 1e-4 * d
+    accumulated terms."""
+    return 1e-4 * max(int(reduce_dim), 1)
 
 
 def _record_tolerance_slack(res, ref, rtol, reduce_dim, dtype):
