@@ -10950,7 +10950,6 @@ def test_accuracy_softmax_backward(shape, dtype, dim, neg_inf):
 
 
 # Tests for aten::_softmax operator
-# TODO: failed at (1, 2) (200, 40999, 3)
 
 
 # ========== sort ==========

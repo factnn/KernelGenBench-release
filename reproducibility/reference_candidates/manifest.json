@@ -105,10 +105,10 @@
       "op": "aten::index_select",
       "file": "aten__index_select.py",
       "sha256": "59e036b42f29f096800fbb829ddb60c6148d76715fddd5b9dbd0964292d08831",
-      "baseline_tests": 18,
-      "baseline_passed": 18,
-      "heldout_tests": 36,
-      "heldout_passed": 36
+      "baseline_tests": 12,
+      "baseline_passed": 12,
+      "heldout_tests": 30,
+      "heldout_passed": 30
     },
     {
       "op": "aten::le",

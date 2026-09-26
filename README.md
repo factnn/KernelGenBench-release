@@ -210,7 +210,7 @@ appendix numbers:
 - **Held-out inputs.** Every candidate runs more cases under the held-out grids
   than under the published ones (`cos` 18 -> 36, `argmax` 126 -> 180,
   `cublasSaxpy_v2` 648 -> 864, `rms_norm` 60 -> 84), and all 20 pass both
-  suites: 1,681 published and 2,530 held-out test cases in total. Per-candidate
+  suites: 1,675 published and 2,524 held-out test cases in total. Per-candidate
   counts and file hashes are in
   `reproducibility/reference_candidates/manifest.json`.
 

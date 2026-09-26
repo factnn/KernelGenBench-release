@@ -65,7 +65,7 @@ def main():
     # because they are the only saved candidates a reader can re-verify.
     macros["HELDOUTPARAGRAPH"] = (
         "Across the 20 released kernels, the number of test cases increases from "
-        "1,681 to 2,530. All 20 kernels pass both suites. Each kernel receives "
+        "1,675 to 2,524. All 20 kernels pass both suites. Each kernel receives "
         "additional cases: \\texttt{cos} increases from 18 to 36, "
         "\\texttt{argmax} from 126 to 180, "
         "\\texttt{cublasSaxpy\\_v2} from 648 to 864 and \\texttt{rms\\_norm} from 60 "
