@@ -64,8 +64,8 @@ def main():
     # Held-out generalization, stated for the shipped reference candidates
     # because they are the only saved candidates a reader can re-verify.
     macros["HELDOUTPARAGRAPH"] = (
-        "Across the 20 released kernels, the number of test cases increases from "
-        "1,675 to 2,524. All 20 kernels pass both suites. Each kernel receives "
+        "Across the 20 released Claude~Code-generated candidates, the number of test cases increases from "
+        "1,675 to 2,524. All 20 pass both suites. Each candidate receives "
         "additional cases: \\texttt{cos} increases from 18 to 36, "
         "\\texttt{argmax} from 126 to 180, "
         "\\texttt{cublasSaxpy\\_v2} from 648 to 864 and \\texttt{rms\\_norm} from 60 "

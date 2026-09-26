@@ -1,7 +1,9 @@
 # Reference candidates
 
 A small set of saved candidates that exercise the released verification pipeline
-end to end. Every entry passes both the published test suite and the held-out
+end to end. They are generation outputs from the Claude~Code corpus behind the
+paper's tables, released as reference material for the pipeline rather than as
+hand-written reference implementations. Every entry passes both the published test suite and the held-out
 suite, whose grids add shapes and strides that were never exposed to the
 generator or to the agent. Use them to check that the infrastructure mounts a
 candidate, runs the operator's tests, applies the anti-hack checks and reports
