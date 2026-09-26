@@ -198,10 +198,10 @@ names follow `<namespace>__<operator>.py` (`aten__softmax.py`,
 The paper's reported rates aggregate 110 or 210 operator outcomes. Most costly agent configurations use a single generation trajectory, whereas kernel timing uses warm-up and repeated measurement. Reproducing a complete table requires access to the corresponding model or agent APIs and can incur substantial token and wall-clock cost; the single-operator commands above validate the released task, generation, and verification pipeline at low cost.
 
 
-### Appendix S reproduction notes
+### Reference-candidate re-verification
 
-Running the three arms on the shipped reference candidates reproduces the
-appendix numbers:
+Running the arms below on the shipped reference candidates reproduces these
+numbers:
 
 - **Tolerance.** The published-protocol audit records 1,153 passing comparisons
   from the 9 candidates whose operator involves a floating-point comparison. The

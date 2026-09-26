@@ -1,7 +1,7 @@
 # Reproducibility material
 
-This directory holds everything the paper's validation appendix needs beyond the
-framework itself.
+This directory holds the released reference candidates together with the tooling
+used to re-verify them.
 
 ## `reference_candidates/`
 
